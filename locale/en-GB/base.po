@@ -1,0 +1,6 @@
+msgid "Johannes Wendig"
+msgstr "@todo"
+
+msgid "Generiert Bilder für Kategorien auf Basis deren Artikeln"
+msgstr "@todo"
+
