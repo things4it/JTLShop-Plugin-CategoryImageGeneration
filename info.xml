@@ -6,9 +6,16 @@
     <URL>http://www.things4it.de</URL>
     <PluginID>things4it_category_image_generation</PluginID>
     <XMLVersion>100</XMLVersion>
+    <ShopVersion>5.0.0-beta.1</ShopVersion>
+    <MinShopVersion>5.0.0-rc.3</MinShopVersion>
     <Icon></Icon>
     <Version>1.0.0</Version>
     <CreateDate>2021-03-30</CreateDate>
     <Install>
+        <Adminmenu>
+            <Customlink sort="1">
+                <Name>Category-Preview</Name>
+            </Customlink>
+        </Adminmenu>
     </Install>
 </jtlshopplugin>
