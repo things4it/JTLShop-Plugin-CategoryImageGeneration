@@ -13,3 +13,5 @@ The plugin uses the jtl-shop tables for the images - no custom mechanism was pro
 * implement enable/disable feature
 * manually triggering image generation
 * i18n
+* support png images
+* check also all subcategories for images ...

@@ -78,14 +78,19 @@ class CategoryImageGenerationCronJob extends Job
                 FROM
                     tartikel a
                 JOIN 
+                	  tkategorie k
+                JOIN 
                     tkategorieartikel ka
                     ON ka.kArtikel = a.kArtikel
-                        AND ka.kKategorie = "' . $categoryId . '"
+                        AND ka.kKategorie = k.kKategorie
                 JOIN
                     tartikelpict ap
                     ON ap.kArtikel = a.kArtikel
                 JOIN tbild b
                     ON b.kbild = ap.kbild
+                WHERE
+                	k.kOberKategorie = "' . $categoryId . '"
+                	OR k.kKategorie = "' . $categoryId . '"
                 ORDER BY RAND()
                 LIMIT 3',
             ReturnType::ARRAY_OF_OBJECTS);
