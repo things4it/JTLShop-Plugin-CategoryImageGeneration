@@ -157,11 +157,11 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function createBlankCategoryImage()
     {
-        $categoryImage = imagecreatetruecolor(1024, 1024);
-        $colorTransparent = imagecolorallocatealpha($categoryImage, 0, 0, 0, 127);
-        imagefill($categoryImage, 0, 0, $colorTransparent);
-        imagealphablending($categoryImage, true);
-        imagesavealpha($categoryImage, true);
+        $categoryImage = \imagecreatetruecolor(1024, 1024);
+        $colorTransparent = \imagecolorallocatealpha($categoryImage, 0, 0, 0, 127);
+        \imagefill($categoryImage, 0, 0, $colorTransparent);
+        \imagealphablending($categoryImage, true);
+        \imagesavealpha($categoryImage, true);
 
         return $categoryImage;
     }
