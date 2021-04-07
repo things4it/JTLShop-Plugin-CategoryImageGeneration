@@ -198,7 +198,7 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function safeCategoryImageAndUpdateDb(int $categoryId, $categoryImage): void
     {
-        $targetImageName = 'things4it_category_image_generation_' . $categoryId . '.png';
+        $targetImageName = Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . $categoryId . '.png';
         $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
         \imagecropauto($categoryImage);
         \imagepng($categoryImage, $targetImagePath);

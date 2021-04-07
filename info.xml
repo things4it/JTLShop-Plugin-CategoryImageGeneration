@@ -13,9 +13,6 @@
     <CreateDate>2021-03-30</CreateDate>
     <Install>
         <Adminmenu>
-            <Customlink sort="1">
-                <Name>Category-Preview</Name>
-            </Customlink>
         </Adminmenu>
     </Install>
 </jtlshopplugin>
