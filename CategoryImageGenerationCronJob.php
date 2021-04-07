@@ -30,9 +30,6 @@ class CategoryImageGenerationCronJob extends Job
     }
 
     /**
-     * TODO:
-     *  - update ... upsert (insert/update) ...
-     *
      * @return bool
      */
     private function resolveAndPersistCategoryImagesBasedOnArticles(): bool
@@ -41,7 +38,11 @@ class CategoryImageGenerationCronJob extends Job
             SELECT
 	            k.kKategorie
             FROM
-	            tkategorie k",
+	            tkategorie k
+            LEFT OUTER JOIN tkategoriepict kp
+	            ON kp.kKategorie = k.kKategorie
+	        WHERE
+	            kp.kKategoriePict IS NULL",
             ReturnType::ARRAY_OF_OBJECTS);
 
         foreach ($categories as $category) {
@@ -203,14 +204,10 @@ class CategoryImageGenerationCronJob extends Job
         \imagepng($categoryImage, $targetImagePath);
         \imagedestroy($categoryImage);
 
-        $this->db->executeQuery(
-            'INSERT INTO
-                    tkategoriepict
-                  SET
-                    kKategorie=' . $categoryId . ',
-                    cPfad="' . $targetImageName . '"',
-            ReturnType::QUERYSINGLE
-        );
+        $this->db->insert('tkategoriepict', (object)[
+            'cPfad' => $targetImageName,
+            'kKategorie' => $categoryId
+        ]);
     }
 
 }
