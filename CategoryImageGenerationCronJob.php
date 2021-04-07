@@ -32,8 +32,6 @@ class CategoryImageGenerationCronJob extends Job
     /**
      * TODO:
      *  - update ... upsert (insert/update) ...
-     *  - select random image
-     *  - support multiple images ...     *
      *
      * @return bool
      */
@@ -47,17 +45,41 @@ class CategoryImageGenerationCronJob extends Job
             ReturnType::ARRAY_OF_OBJECTS);
 
         foreach ($categories as $category) {
-            $randomArticleImagesForCategory = $this->db->query('
+            $this->handleCategory($category->kKategorie);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param int $categoryId
+     */
+    private function handleCategory(int $categoryId): void
+    {
+        $randomArticleImages = $this->fetchRandomArticleImages($categoryId);
+        $randomArticleImagesCount = sizeof($randomArticleImages);
+        if ($randomArticleImagesCount > 0) {
+            $categoryImage = $this->generateCategoryImage($randomArticleImagesCount, $randomArticleImages);
+            $this->safeCategoryImageAndUpdateDb($categoryId, $categoryImage);
+        }
+    }
+
+    /**
+     * @param int $categoryId
+     * @return array
+     */
+    private function fetchRandomArticleImages(int $categoryId): array
+    {
+        return $this->db->query('
                 SELECT
                     ka.kKategorie,
-                    ap.kBild,
                     b.cPfad
                 FROM
                     tartikel a
                 JOIN 
                     tkategorieartikel ka
                     ON ka.kArtikel = a.kArtikel
-                        AND ka.kKategorie = "' . $category->kKategorie . '"
+                        AND ka.kKategorie = "' . $categoryId . '"
                 JOIN
                     tartikelpict ap
                     ON ap.kArtikel = a.kArtikel
@@ -65,22 +87,27 @@ class CategoryImageGenerationCronJob extends Job
                     ON b.kbild = ap.kbild
                 ORDER BY RAND()
                 LIMIT 3',
-                ReturnType::ARRAY_OF_OBJECTS);
+            ReturnType::ARRAY_OF_OBJECTS);
+    }
 
-            $categoryImage = imagecreatetruecolor(1024, 1024);
-            $colorTransparent = imagecolorallocatealpha($categoryImage, 0, 0, 0, 127);
-            imagefill($categoryImage, 0, 0, $colorTransparent);
-            imagealphablending($categoryImage, true);
-            imagesavealpha($categoryImage, true);
+    /**
+     * @param int $randomArticleImagesCount
+     * @param array $randomArticleImages
+     * @return false|\GdImage|resource
+     */
+    private function generateCategoryImage(int $randomArticleImagesCount, array $randomArticleImages)
+    {
+        $categoryImage = $this->createBlankCategoryImage();
 
-            $i = 0;
-            foreach ($randomArticleImagesForCategory as $randomArticleImage) {
+        if ($randomArticleImagesCount == 3) {
+            $imageNumber = 0;
+            foreach ($randomArticleImages as $randomArticleImage) {
                 $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
                 if (\file_exists($sourceImagePath)) {
                     $image = $this->getResizedArticleImage($sourceImagePath, 500, 500);
-                    if ($i == 0) {
+                    if ($imageNumber == 0) {
                         \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-                    } else if ($i == 1) {
+                    } elseif ($imageNumber == 1) {
                         \imagecopy($categoryImage, $image, 500, 24, 0, 0, imagesx($image), imagesy($image));
                     } else {
                         \imagecopy($categoryImage, $image, 250, 500 + 24, 0, 0, imagesx($image), imagesy($image));
@@ -89,28 +116,62 @@ class CategoryImageGenerationCronJob extends Job
                     \imagedestroy($image);
                 }
 
-                $i++;
+                $imageNumber++;
+            }
+        } elseif ($randomArticleImagesCount == 2) {
+            $imageNumber = 0;
+            foreach ($randomArticleImages as $randomArticleImage) {
+                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
+                if (\file_exists($sourceImagePath)) {
+                    $image = $this->getResizedArticleImage($sourceImagePath, 500, 500);
+                    if ($imageNumber == 0) {
+                        \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+                    } else {
+                        \imagecopy($categoryImage, $image, 500, 500, 0, 0, imagesx($image), imagesy($image));
+                    }
+
+                    \imagedestroy($image);
+                }
+
+                $imageNumber++;
+            }
+        } elseif ($randomArticleImagesCount == 1) {
+            $randomArticleImage = $randomArticleImages[0];
+
+            $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
+            if (\file_exists($sourceImagePath)) {
+                $image = $this->getResizedArticleImage($sourceImagePath, 1024, 1024);
+                \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+                \imagedestroy($image);
             }
 
-            $targetImageName = 'things4it_category_image_generation_' . $category->kKategorie . '.png';
-            $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
-            \imagecropauto($categoryImage);
-            \imagepng($categoryImage, $targetImagePath);
-            \imagedestroy($categoryImage);
-
-            $this->db->executeQuery(
-                'INSERT INTO
-                    tkategoriepict
-                  SET
-                    kKategorie=' . $category->kKategorie . ',
-                    cPfad="' . $targetImageName . '"',
-                ReturnType::QUERYSINGLE
-            );
         }
 
-        return true;
+        return $categoryImage;
     }
 
+
+    /**
+     * @return false|\GdImage|resource
+     */
+    private function createBlankCategoryImage()
+    {
+        $categoryImage = imagecreatetruecolor(1024, 1024);
+        $colorTransparent = imagecolorallocatealpha($categoryImage, 0, 0, 0, 127);
+        imagefill($categoryImage, 0, 0, $colorTransparent);
+        imagealphablending($categoryImage, true);
+        imagesavealpha($categoryImage, true);
+
+        return $categoryImage;
+    }
+
+
+    /**
+     * @param string $sourceImagePath
+     * @param int $width
+     * @param int $height
+     * @return false|\GdImage|resource
+     */
     private function getResizedArticleImage(string $sourceImagePath, int $width = 640, int $height = 640)
     {
         list($sourceWidth, $sourceHeight) = \getimagesize($sourceImagePath);
@@ -128,6 +189,28 @@ class CategoryImageGenerationCronJob extends Job
         \imagedestroy($imageOriginal);
 
         return $imageResized;
+    }
+
+    /**
+     * @param int $categoryId
+     * @param object $categoryImage
+     */
+    private function safeCategoryImageAndUpdateDb(int $categoryId, $categoryImage): void
+    {
+        $targetImageName = 'things4it_category_image_generation_' . $categoryId . '.png';
+        $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
+        \imagecropauto($categoryImage);
+        \imagepng($categoryImage, $targetImagePath);
+        \imagedestroy($categoryImage);
+
+        $this->db->executeQuery(
+            'INSERT INTO
+                    tkategoriepict
+                  SET
+                    kKategorie=' . $categoryId . ',
+                    cPfad="' . $targetImageName . '"',
+            ReturnType::QUERYSINGLE
+        );
     }
 
 }
