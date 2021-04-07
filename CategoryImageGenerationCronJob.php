@@ -190,7 +190,20 @@ class CategoryImageGenerationCronJob extends Job
         }
 
         $imageResized = \imagecreatetruecolor($width, $height);
-        $imageOriginal = \imagecreatefromjpeg($sourceImagePath);
+        $imageOriginalInfo = \getimagesize($sourceImagePath);
+        switch ($imageOriginalInfo[2]) {
+            case \IMAGETYPE_GIF:
+                $imageOriginal = \imagecreatefromgif($sourceImagePath);
+                break;
+            case \IMAGETYPE_PNG:
+                $imageOriginal = \imagecreatefrompng($sourceImagePath);
+                break;
+            case \IMAGETYPE_JPEG:
+            default:
+                $imageOriginal = \imagecreatefromjpeg($sourceImagePath);
+                break;
+        }
+
         \imagecopyresampled($imageResized, $imageOriginal, 0, 0, 0, 0, $width, $height, $sourceWidth, $sourceHeight);
         \imagedestroy($imageOriginal);
 
