@@ -1,6 +1,12 @@
-msgid "Johannes Wendig"
-msgstr "@todo"
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Kategorie Bild generierung"
+msgstr "Category image generation"
 
 msgid "Generiert Bilder für Kategorien auf Basis deren Artikeln"
-msgstr "@todo"
+msgstr "Generates category images based on their articles"
 
+msgid "things4it_category_image_generation_cronjob"
+msgstr "Generate category images"
