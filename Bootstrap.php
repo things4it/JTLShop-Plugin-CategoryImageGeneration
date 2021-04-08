@@ -35,6 +35,14 @@ class Bootstrap extends Bootstrapper
             }
         });
 
+        $dispatcher->listen(Event::GET_AVAILABLE_CRONJOBS, static function (array $args) {
+            $jobs = &$args['jobs'];
+            if (is_array($jobs)) {
+                array_push($jobs, self::CATEGORY_IMAGE_GENERATION_CRON_JOB);
+            }
+        });
+
+
     }
 
     /**

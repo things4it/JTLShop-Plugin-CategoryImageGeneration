@@ -78,7 +78,7 @@ class CategoryImageGenerationCronJob extends Job
                 FROM
                     tartikel a
                 JOIN 
-                	  tkategorie k
+                	tkategorie k
                 JOIN 
                     tkategorieartikel ka
                     ON ka.kArtikel = a.kArtikel
