@@ -87,7 +87,13 @@ class Bootstrap extends Bootstrapper
 
     private function removeGeneratedImages(): void
     {
-        $categoryIdsObjects = $this->getDB()->query("SELECT kp.kKategorie FROM tkategoriepict kp WHERE kp.cPfad LIKE '" . self::CATEGORY_IMAGE_NAME_PREFIX . "%'", ReturnType::ARRAY_OF_OBJECTS);
+        $categoryIdsObjects = $this->getDB()->queryPrepared("
+                    SELECT 
+                           kp.kKategorie 
+                    FROM tkategoriepict kp 
+                    WHERE kp.cPfad LIKE :pathPrefix",
+            ['pathPrefix' => self::CATEGORY_IMAGE_NAME_PREFIX . '%'],
+            ReturnType::ARRAY_OF_OBJECTS);
         $categoryIds = \array_map(function ($o) {
             return $o->kKategorie;
         }, $categoryIdsObjects);

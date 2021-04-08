@@ -34,7 +34,7 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function resolveAndPersistCategoryImagesBasedOnArticles(): bool
     {
-        $categories = $this->db->query("
+        $categories = $this->db->queryPrepared("
             SELECT
 	            k.kKategorie
             FROM
@@ -43,7 +43,7 @@ class CategoryImageGenerationCronJob extends Job
 	            ON kp.kKategorie = k.kKategorie
 	        WHERE
 	            kp.kKategoriePict IS NULL",
-            ReturnType::ARRAY_OF_OBJECTS);
+            [], ReturnType::ARRAY_OF_OBJECTS);
 
         foreach ($categories as $category) {
             $this->handleCategory($category->kKategorie);
@@ -71,7 +71,7 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function fetchRandomArticleImages(int $categoryId): array
     {
-        $categoryPaths = $this->db->query("
+        $categoryPaths = $this->db->queryPrepared("
             SELECT
                 k1.kKategorie k1,
                 k2.kKategorie k2,
@@ -84,7 +84,8 @@ class CategoryImageGenerationCronJob extends Job
             LEFT JOIN tkategorie k4 ON k4.kOberKategorie = k3.kKategorie		
             LEFT JOIN tkategorie k5 ON k5.kOberKategorie = k4.kKategorie			
             WHERE
-                k1.kKategorie = '" . $categoryId . "'",
+                k1.kKategorie = :categoryId",
+            ['categoryId' => $categoryId],
             ReturnType::ARRAY_OF_OBJECTS);
 
         $categoryIds = [];
@@ -98,7 +99,7 @@ class CategoryImageGenerationCronJob extends Job
         $categoryIds = array_filter($categoryIds);
         $categoryIds = array_unique($categoryIds);
 
-        return $this->db->query("
+        return $this->db->queryPrepared("
                 SELECT
                      ka.kKategorie,
                      b.cPfad
@@ -107,9 +108,10 @@ class CategoryImageGenerationCronJob extends Job
                 JOIN tbild b ON b.kBild = ap.kBild
                 JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
                 WHERE
-                    ka.kKategorie IN (" . join(',', $categoryIds) . ")
+                    ka.kKategorie IN (:categoryIds)
                 ORDER BY RAND()
                 LIMIT 3",
+            ['categoryIds' => join(',', $categoryIds)],
             ReturnType::ARRAY_OF_OBJECTS);
     }
 
