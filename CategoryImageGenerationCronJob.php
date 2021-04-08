@@ -71,28 +71,45 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function fetchRandomArticleImages(int $categoryId): array
     {
-        return $this->db->query('
+        $categoryPaths = $this->db->query("
+            SELECT
+                k1.kKategorie k1,
+                k2.kKategorie k2,
+                k3.kKategorie k3,
+                k4.kKategorie k4,
+                k5.kKategorie k5
+            FROM tkategorie k1
+            LEFT JOIN tkategorie k2 ON k2.kOberKategorie = k1.kKategorie
+            LEFT JOIN tkategorie k3 ON k3.kOberKategorie = k2.kKategorie	
+            LEFT JOIN tkategorie k4 ON k4.kOberKategorie = k3.kKategorie		
+            LEFT JOIN tkategorie k5 ON k5.kOberKategorie = k4.kKategorie			
+            WHERE
+                k1.kKategorie = '" . $categoryId . "'",
+            ReturnType::ARRAY_OF_OBJECTS);
+
+        $categoryIds = [];
+        foreach ($categoryPaths as $categoryPath) {
+            array_push($categoryIds, $categoryPath->k1);
+            array_push($categoryIds, $categoryPath->k2);
+            array_push($categoryIds, $categoryPath->k3);
+            array_push($categoryIds, $categoryPath->k4);
+            array_push($categoryIds, $categoryPath->k5);
+        }
+        $categoryIds = array_filter($categoryIds);
+        $categoryIds = array_unique($categoryIds);
+
+        return $this->db->query("
                 SELECT
-                    ka.kKategorie,
-                    b.cPfad
-                FROM
-                    tartikel a
-                JOIN 
-                	tkategorie k
-                JOIN 
-                    tkategorieartikel ka
-                    ON ka.kArtikel = a.kArtikel
-                        AND ka.kKategorie = k.kKategorie
-                JOIN
-                    tartikelpict ap
-                    ON ap.kArtikel = a.kArtikel
-                JOIN tbild b
-                    ON b.kbild = ap.kbild
+                     ka.kKategorie,
+                     b.cPfad
+                FROM tartikel a
+                JOIN tartikelpict ap ON ap.kArtikel = a.kArtikel
+                JOIN tbild b ON b.kBild = ap.kBild
+                JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
                 WHERE
-                	k.kOberKategorie = "' . $categoryId . '"
-                	OR k.kKategorie = "' . $categoryId . '"
+                    ka.kKategorie IN (" . join(',', $categoryIds) . ")
                 ORDER BY RAND()
-                LIMIT 3',
+                LIMIT 3",
             ReturnType::ARRAY_OF_OBJECTS);
     }
 
