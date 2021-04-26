@@ -125,7 +125,7 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function generateCategoryImage(int $randomArticleImagesCount, array $randomArticleImages)
     {
-        $categoryImage = $this->createBlankCategoryImage();
+        $categoryImage = $this->createTransparentImage(1024, 1024);
 
         if ($randomArticleImagesCount == 3) {
             $imageNumber = 0;
@@ -178,55 +178,59 @@ class CategoryImageGenerationCronJob extends Job
         return $categoryImage;
     }
 
-
     /**
-     * @return false|\GdImage|resource
-     */
-    private function createBlankCategoryImage()
-    {
-        $categoryImage = \imagecreatetruecolor(1024, 1024);
-        $colorTransparent = \imagecolorallocatealpha($categoryImage, 0, 0, 0, 127);
-        \imagefill($categoryImage, 0, 0, $colorTransparent);
-        \imagealphablending($categoryImage, true);
-        \imagesavealpha($categoryImage, true);
-
-        return $categoryImage;
-    }
-
-
-    /**
-     * @param string $sourceImagePath
      * @param int $width
      * @param int $height
      * @return false|\GdImage|resource
      */
-    private function getResizedArticleImage(string $sourceImagePath, int $width = 640, int $height = 640)
+    private function createTransparentImage(int $width, int $height)
     {
-        list($sourceWidth, $sourceHeight) = \getimagesize($sourceImagePath);
+        $image = \imagecreatetruecolor($width, $height);
+        $colorTransparent = \imagecolorallocatealpha($image, 0, 0, 0, 127);
+        \imagefill($image, 0, 0, $colorTransparent);
+        \imagealphablending($image, true);
+        \imagesavealpha($image, true);
 
-        $sourceRatio = $sourceWidth / $sourceHeight;
-        if ($width / $height > $sourceRatio) {
-            $width = $height * $sourceRatio;
-        } else {
-            $height = $width / $sourceRatio;
-        }
+        return $image;
+    }
 
-        $imageResized = \imagecreatetruecolor($width, $height);
-        $imageOriginalInfo = \getimagesize($sourceImagePath);
-        switch ($imageOriginalInfo[2]) {
+
+    /**
+     * @param string $originalImagePath
+     * @param int $targetWidth
+     * @param int $targetHeight
+     * @return false|\GdImage|resource
+     */
+    private function getResizedArticleImage(string $originalImagePath, int $targetWidth = 640, int $targetHeight = 640)
+    {
+        list($originalImageWidth, $originalImageHeight, $originalImageType) = \getimagesize($originalImagePath);
+        switch ($originalImageType) {
             case \IMAGETYPE_GIF:
-                $imageOriginal = \imagecreatefromgif($sourceImagePath);
+                $imageOriginal = \imagecreatefromgif($originalImagePath);
                 break;
             case \IMAGETYPE_PNG:
-                $imageOriginal = \imagecreatefrompng($sourceImagePath);
+                $imageOriginal = \imagecreatefrompng($originalImagePath);
                 break;
             case \IMAGETYPE_JPEG:
             default:
-                $imageOriginal = \imagecreatefromjpeg($sourceImagePath);
+                $imageOriginal = \imagecreatefromjpeg($originalImagePath);
                 break;
         }
 
-        \imagecopyresampled($imageResized, $imageOriginal, 0, 0, 0, 0, $width, $height, $sourceWidth, $sourceHeight);
+        if ($originalImageWidth > $originalImageHeight) {
+            $scale = $targetWidth / $originalImageWidth;
+        } else {
+            $scale = $targetHeight / $originalImageHeight;
+        }
+
+        $newWidth = $originalImageWidth * $scale;
+        $newHeight = $originalImageHeight * $scale;
+
+        $offsetX = ($targetWidth - $newWidth) / 2;
+        $offsetY = ($targetHeight - $newHeight) / 2;
+
+        $imageResized = $this->createTransparentImage($targetWidth, $targetHeight);
+        \imagecopyresampled($imageResized, $imageOriginal, $offsetX, $offsetY, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
         \imagedestroy($imageOriginal);
 
         return $imageResized;
