@@ -21,18 +21,56 @@ class CategoryImageGenerationCronJob extends Job
     {
         parent::start($queueEntry);
 
-        $this->logger->info('Category-Image-Generation-CronJob started');
-        $this->resolveAndPersistCategoryImagesBasedOnArticles();
-        $this->logger->info('Category-Image-Generation-CronJob finished.');
+        if ($queueEntry->taskLimit === 0) {
+            $queueEntry->taskLimit = $this->initCronJobQueue();
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: started - initialize queue with %s categories without image', $queueEntry->taskLimit));
+        } else {
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: continue queue processing - remaining categories: %s', $queueEntry->taskLimit));
+        }
 
-        $this->setFinished(true);
+        $this->generateCategoryImagesForNextChunk();
+        $queueEntry->taskLimit = $this->getRemainingCategoriesCount();
+        if ($queueEntry->taskLimit == 0) {
+            $this->logger->info('Category-Image-Generation-CronJob: finished');
+            $this->setFinished(true);
+        } else {
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: chunk processed - %s categories in queue', $queueEntry->taskLimit));
+        }
+
         return $this;
     }
 
     /**
-     * @return bool
+     * @return int count of categories without image
      */
-    private function resolveAndPersistCategoryImagesBasedOnArticles(): bool
+    private function initCronJobQueue(): int
+    {
+        $categoriesWithoutImage = $this->fetchCategoriesWithoutImage();
+        foreach ($categoriesWithoutImage as $categoryWithoutImage) {
+            $this->db->upsert('xplugin_t4it_category_image_generation_job_queue', (object)[
+                'kKategorie' => $categoryWithoutImage->kKategorie
+            ]);
+        }
+
+        return sizeof($categoriesWithoutImage);
+    }
+
+    private function generateCategoryImagesForNextChunk()
+    {
+        $categories = $this->db->queryPrepared('
+            SELECT
+	            kKategorie
+            FROM
+	            xplugin_t4it_category_image_generation_job_queue 
+	        LIMIT 120',
+            [], ReturnType::ARRAY_OF_OBJECTS);
+
+        foreach ($categories as $category) {
+            $this->handleCategory($category->kKategorie);
+        }
+    }
+
+    private function fetchCategoriesWithoutImage()
     {
         $categories = $this->db->queryPrepared('
             SELECT
@@ -45,17 +83,13 @@ class CategoryImageGenerationCronJob extends Job
 	            kp.kKategoriePict IS NULL',
             [], ReturnType::ARRAY_OF_OBJECTS);
 
-        $categoriesCount = sizeof($categories);
-        if ($categoriesCount > 0) {
-            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: %s categories without image', $categoriesCount));
-            foreach ($categories as $category) {
-                $this->handleCategory($category->kKategorie);
-            }
-        } else {
-            $this->logger->info('Category-Image-Generation-CronJob: nothing to do - every category has a image');
-        }
+        return $categories;
+    }
 
-        return true;
+    private function getRemainingCategoriesCount(): int
+    {
+        $result = $this->db->queryPrepared('SELECT COUNT(*) AS count FROM xplugin_t4it_category_image_generation_job_queue', [], ReturnType::SINGLE_OBJECT);
+        return (int)$result->count;
     }
 
     /**
@@ -72,6 +106,8 @@ class CategoryImageGenerationCronJob extends Job
         } else {
             $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Could not create image for category %s - no articles with images found', $categoryId));
         }
+
+        $this->db->delete('xplugin_t4it_category_image_generation_job_queue', 'kKategorie', $categoryId);
     }
 
     /**
