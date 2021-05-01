@@ -21,9 +21,9 @@ class CategoryImageGenerationCronJob extends Job
     {
         parent::start($queueEntry);
 
-        $this->logger->debug('Category-Image-Generation-CronJob started');
+        $this->logger->info('Category-Image-Generation-CronJob started');
         $this->resolveAndPersistCategoryImagesBasedOnArticles();
-        $this->logger->debug('Category-Image-Generation-CronJob finished.');
+        $this->logger->info('Category-Image-Generation-CronJob finished.');
 
         $this->setFinished(true);
         return $this;
@@ -45,8 +45,14 @@ class CategoryImageGenerationCronJob extends Job
 	            kp.kKategoriePict IS NULL',
             [], ReturnType::ARRAY_OF_OBJECTS);
 
-        foreach ($categories as $category) {
-            $this->handleCategory($category->kKategorie);
+        $categoriesCount = sizeof($categories);
+        if ($categoriesCount > 0) {
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: %s categories without image', $categoriesCount));
+            foreach ($categories as $category) {
+                $this->handleCategory($category->kKategorie);
+            }
+        } else {
+            $this->logger->info('Category-Image-Generation-CronJob: nothing to do - every category has a image');
         }
 
         return true;
