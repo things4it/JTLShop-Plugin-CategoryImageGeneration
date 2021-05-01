@@ -108,7 +108,7 @@ class CategoryImageGenerationCronJob extends Job
         $categoryIds = array_filter($categoryIds);
         $categoryIds = array_unique($categoryIds);
 
-        return $this->db->queryPrepared('
+        return $this->db->query('
                 SELECT
                      ka.kKategorie,
                      b.cPfad
@@ -117,10 +117,10 @@ class CategoryImageGenerationCronJob extends Job
                 JOIN tbild b ON b.kBild = ap.kBild
                 JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
                 WHERE
-                    ka.kKategorie IN (:categoryIds)
+                    ka.kKategorie IN (' . join(',', $categoryIds) . ')
                 ORDER BY RAND()
-                LIMIT 3',
-            ['categoryIds' => join(',', $categoryIds)],
+                LIMIT 3
+        ',
             ReturnType::ARRAY_OF_OBJECTS);
     }
 
