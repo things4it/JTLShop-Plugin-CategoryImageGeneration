@@ -5,7 +5,10 @@ namespace Plugin\things4it_category_image_generation;
 use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
-use JTL\DB\ReturnType;
+use Plugin\things4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
+use Plugin\things4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
+use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
+use Plugin\things4it_category_image_generation\CategoriesHelper\Image;
 
 /**
  * Class CategoryImageGenerationCronJob
@@ -29,7 +32,7 @@ class CategoryImageGenerationCronJob extends Job
         }
 
         $this->generateCategoryImagesForNextChunk();
-        $queueEntry->taskLimit = $this->getRemainingCategoriesCount();
+        $queueEntry->taskLimit = CategoryCronJobQueueDao::count($this->db);
         if ($queueEntry->taskLimit == 0) {
             $this->logger->info('Category-Image-Generation-CronJob: finished');
             $this->setFinished(true);
@@ -45,11 +48,9 @@ class CategoryImageGenerationCronJob extends Job
      */
     private function initCronJobQueue(): int
     {
-        $categoriesWithoutImage = $this->fetchCategoriesWithoutImage();
+        $categoriesWithoutImage = CategoryHelperDao::findAllWithoutImage($this->db);
         foreach ($categoriesWithoutImage as $categoryWithoutImage) {
-            $this->db->upsert('xplugin_t4it_category_image_generation_job_queue', (object)[
-                'kKategorie' => $categoryWithoutImage->kKategorie
-            ]);
+            CategoryCronJobQueueDao::save($categoryWithoutImage->getKKategorie(), $this->db);
         }
 
         return sizeof($categoriesWithoutImage);
@@ -57,112 +58,33 @@ class CategoryImageGenerationCronJob extends Job
 
     private function generateCategoryImagesForNextChunk()
     {
-        $categories = $this->db->queryPrepared('
-            SELECT
-	            kKategorie
-            FROM
-	            xplugin_t4it_category_image_generation_job_queue 
-	        LIMIT 120',
-            [], ReturnType::ARRAY_OF_OBJECTS);
-
+        $categories = CategoryCronJobQueueDao::findByLimit($this->db, 120);
         foreach ($categories as $category) {
-            $this->handleCategory($category->kKategorie);
+            $this->handleCategory($category);
         }
     }
 
-    private function fetchCategoriesWithoutImage()
-    {
-        $categories = $this->db->queryPrepared('
-            SELECT
-	            k.kKategorie
-            FROM
-	            tkategorie k
-            LEFT OUTER JOIN tkategoriepict kp
-	            ON kp.kKategorie = k.kKategorie
-	        WHERE
-	            kp.kKategoriePict IS NULL',
-            [], ReturnType::ARRAY_OF_OBJECTS);
-
-        return $categories;
-    }
-
-    private function getRemainingCategoriesCount(): int
-    {
-        $result = $this->db->queryPrepared('SELECT COUNT(*) AS count FROM xplugin_t4it_category_image_generation_job_queue', [], ReturnType::SINGLE_OBJECT);
-        return (int)$result->count;
-    }
-
     /**
-     * @param int $categoryId
+     * @param CategoryCronJobEntry $category
      */
-    private function handleCategory(int $categoryId): void
+    private function handleCategory(CategoryCronJobEntry $category): void
     {
-        $randomArticleImages = $this->fetchRandomArticleImages($categoryId);
+        $randomArticleImages = CategoryHelperDao::findRandomArticleImages($category->getKKategorie(), $this->db);
         $randomArticleImagesCount = sizeof($randomArticleImages);
         if ($randomArticleImagesCount > 0) {
             $categoryImage = $this->generateCategoryImage($randomArticleImagesCount, $randomArticleImages);
-            $this->safeCategoryImageAndUpdateDb($categoryId, $categoryImage);
-            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $categoryId));
+            $this->safeCategoryImageAndUpdateDb($category->getKKategorie(), $categoryImage);
+            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $category->getKKategorie()));
         } else {
-            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Could not create image for category %s - no articles with images found', $categoryId));
+            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Could not create image for category %s - no articles with images found', $category->getKKategorie()));
         }
 
-        $this->db->delete('xplugin_t4it_category_image_generation_job_queue', 'kKategorie', $categoryId);
-    }
-
-    /**
-     * @param int $categoryId
-     * @return array
-     */
-    private function fetchRandomArticleImages(int $categoryId): array
-    {
-        $categoryPaths = $this->db->queryPrepared('
-            SELECT
-                k1.kKategorie k1,
-                k2.kKategorie k2,
-                k3.kKategorie k3,
-                k4.kKategorie k4,
-                k5.kKategorie k5
-            FROM tkategorie k1
-            LEFT JOIN tkategorie k2 ON k2.kOberKategorie = k1.kKategorie
-            LEFT JOIN tkategorie k3 ON k3.kOberKategorie = k2.kKategorie	
-            LEFT JOIN tkategorie k4 ON k4.kOberKategorie = k3.kKategorie		
-            LEFT JOIN tkategorie k5 ON k5.kOberKategorie = k4.kKategorie			
-            WHERE
-                k1.kKategorie = :categoryId',
-            ['categoryId' => $categoryId],
-            ReturnType::ARRAY_OF_OBJECTS);
-
-        $categoryIds = [];
-        foreach ($categoryPaths as $categoryPath) {
-            array_push($categoryIds, $categoryPath->k1);
-            array_push($categoryIds, $categoryPath->k2);
-            array_push($categoryIds, $categoryPath->k3);
-            array_push($categoryIds, $categoryPath->k4);
-            array_push($categoryIds, $categoryPath->k5);
-        }
-        $categoryIds = array_filter($categoryIds);
-        $categoryIds = array_unique($categoryIds);
-
-        return $this->db->query('
-                SELECT
-                     ka.kKategorie,
-                     b.cPfad
-                FROM tartikel a
-                JOIN tartikelpict ap ON ap.kArtikel = a.kArtikel
-                JOIN tbild b ON b.kBild = ap.kBild
-                JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
-                WHERE
-                    ka.kKategorie IN (' . join(',', $categoryIds) . ')
-                ORDER BY RAND()
-                LIMIT 3
-        ',
-            ReturnType::ARRAY_OF_OBJECTS);
+        CategoryCronJobQueueDao::delete($category->getKKategorie(), $this->db);
     }
 
     /**
      * @param int $randomArticleImagesCount
-     * @param array $randomArticleImages
+     * @param Image[] $randomArticleImages
      * @return false|\GdImage|resource
      */
     private function generateCategoryImage(int $randomArticleImagesCount, array $randomArticleImages)
@@ -172,7 +94,7 @@ class CategoryImageGenerationCronJob extends Job
         if ($randomArticleImagesCount == 3) {
             $imageNumber = 0;
             foreach ($randomArticleImages as $randomArticleImage) {
-                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
+                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->getCPath();
                 if (\file_exists($sourceImagePath)) {
                     $image = $this->getResizedArticleImage($sourceImagePath, 500, 500);
                     if ($imageNumber == 0) {
@@ -191,7 +113,7 @@ class CategoryImageGenerationCronJob extends Job
         } elseif ($randomArticleImagesCount == 2) {
             $imageNumber = 0;
             foreach ($randomArticleImages as $randomArticleImage) {
-                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
+                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->getCPath();
                 if (\file_exists($sourceImagePath)) {
                     $image = $this->getResizedArticleImage($sourceImagePath, 500, 500);
                     if ($imageNumber == 0) {
@@ -208,7 +130,7 @@ class CategoryImageGenerationCronJob extends Job
         } elseif ($randomArticleImagesCount == 1) {
             $randomArticleImage = $randomArticleImages[0];
 
-            $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->cPfad;
+            $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $randomArticleImage->getCPath();
             if (\file_exists($sourceImagePath)) {
                 $image = $this->getResizedArticleImage($sourceImagePath, 1024, 1024);
                 \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
@@ -290,10 +212,7 @@ class CategoryImageGenerationCronJob extends Job
         \imagepng($categoryImage, $targetImagePath);
         \imagedestroy($categoryImage);
 
-        $this->db->insert('tkategoriepict', (object)[
-            'cPfad' => $targetImageName,
-            'kKategorie' => $categoryId
-        ]);
+        CategoryHelperDao::saveCategoryImage($categoryId, $targetImagePath, $this->db);
     }
 
 }
