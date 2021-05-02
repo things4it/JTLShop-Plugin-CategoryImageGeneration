@@ -4,6 +4,7 @@ namespace Plugin\things4it_category_image_generation\CategoriesHelper;
 
 use DbInterface;
 use JTL\DB\ReturnType;
+use Plugin\things4it_category_image_generation\Bootstrap;
 
 class CategoryHelperDao
 {
@@ -98,15 +99,34 @@ class CategoryHelperDao
 
     /**
      * @param int $categoryId
-     * @param string $imagePath
+     * @param string $imageName
      * @param DbInterface $db
      */
-    public static function saveCategoryImage(int $categoryId, string $imagePath, DbInterface $db)
+    public static function saveCategoryImage(int $categoryId, string $imageName, DbInterface $db)
     {
         $db->insert('tkategoriepict', (object)[
-            'cPfad' => $imagePath,
+            'cPfad' => $imageName,
             'kKategorie' => $categoryId
         ]);
+    }
+
+    public static function removeGeneratedImages(DbInterface $db): void
+    {
+        $categoryIdsObjects = $db->queryPrepared("
+                    SELECT 
+                           kp.kKategorie 
+                    FROM tkategoriepict kp 
+                    WHERE kp.cPfad LIKE :pathPrefix",
+            ['pathPrefix' => Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . '%'],
+            ReturnType::ARRAY_OF_OBJECTS);
+
+        $categoryIds = \array_map(function ($o) {
+            return $o->kKategorie;
+        }, $categoryIdsObjects);
+
+        foreach ($categoryIds as $categoryId) {
+            $db->delete('tkategoriepict', 'kKategorie', $categoryId);
+        }
     }
 
 

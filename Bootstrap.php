@@ -6,11 +6,10 @@
 
 namespace Plugin\things4it_category_image_generation;
 
-use JTL\DB\ReturnType;
 use JTL\Events\Dispatcher;
 use JTL\Events\Event;
-use JTL\Media\Image\Category;
 use JTL\Plugin\Bootstrapper;
+use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
 
 /**
  * Class Bootstrap
@@ -63,7 +62,7 @@ class Bootstrap extends Bootstrapper
         $this->removeCron();
 
         if ($deleteData) {
-            $this->removeGeneratedImages();
+            CategoryHelperDao::removeGeneratedImages($this->getDB());
         }
     }
 
@@ -83,25 +82,6 @@ class Bootstrap extends Bootstrapper
     private function removeCron(): void
     {
         $this->getDB()->delete('tcron', 'jobType', self::CATEGORY_IMAGE_GENERATION_CRON_JOB);
-    }
-
-    private function removeGeneratedImages(): void
-    {
-        $categoryIdsObjects = $this->getDB()->queryPrepared("
-                    SELECT 
-                           kp.kKategorie 
-                    FROM tkategoriepict kp 
-                    WHERE kp.cPfad LIKE :pathPrefix",
-            ['pathPrefix' => self::CATEGORY_IMAGE_NAME_PREFIX . '%'],
-            ReturnType::ARRAY_OF_OBJECTS);
-        $categoryIds = \array_map(function ($o) {
-            return $o->kKategorie;
-        }, $categoryIdsObjects);
-
-        foreach ($categoryIds as $categoryId) {
-            $this->getDB()->delete('tkategoriepict', 'kKategorie', $categoryId);
-        }
-        Category::clearCache($categoryIds);
     }
 
 }
