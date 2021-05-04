@@ -4,7 +4,6 @@ namespace Plugin\t4it_category_image_generation\CategoriesHelper;
 
 use DbInterface;
 use JTL\DB\ReturnType;
-use Plugin\t4it_category_image_generation\Bootstrap;
 
 class CategoryHelperDao
 {
@@ -117,7 +116,7 @@ class CategoryHelperDao
                            kp.kKategorie 
                     FROM tkategoriepict kp 
                     WHERE kp.cPfad LIKE :pathPrefix",
-            ['pathPrefix' => Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . '%'],
+            ['pathPrefix' => CategoryImageGenerator::getImageNamePrefix() . '%'],
             ReturnType::ARRAY_OF_OBJECTS);
 
         $categoryIds = \array_map(function ($o) {
