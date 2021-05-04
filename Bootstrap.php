@@ -10,6 +10,7 @@ use JTL\Events\Dispatcher;
 use JTL\Events\Event;
 use JTL\Plugin\Bootstrapper;
 use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
+use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
 
 /**
  * Class Bootstrap
@@ -63,6 +64,7 @@ class Bootstrap extends Bootstrapper
 
         if ($deleteData) {
             CategoryHelperDao::removeGeneratedImages($this->getDB());
+            CategoryImageGenerator::removeGeneratedImages();
         }
     }
 

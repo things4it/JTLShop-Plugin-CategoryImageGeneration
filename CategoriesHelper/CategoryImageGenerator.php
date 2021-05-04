@@ -76,6 +76,17 @@ class CategoryImageGenerator
         return $targetImageName;
     }
 
+    public static function removeGeneratedImages()
+    {
+        $categoryImageFiles = glob(\PFAD_ROOT . \STORAGE_CATEGORIES . Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . '*.png');
+        foreach ($categoryImageFiles as $categoryImageFile) {
+            if (file_exists($categoryImageFile) && !is_dir($categoryImageFile)) {
+                unlink($categoryImageFile);
+            }
+
+        }
+    }
+
     /**
      * @param int $width
      * @param int $height
