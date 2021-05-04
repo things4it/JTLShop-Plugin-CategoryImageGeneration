@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugin\things4it_category_image_generation\CategoriesHelper;
+namespace Plugin\t4it_category_image_generation\CategoriesHelper;
 
 class Category
 {
