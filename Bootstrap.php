@@ -19,7 +19,6 @@ use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerato
 class Bootstrap extends Bootstrapper
 {
 
-    public const CATEGORY_IMAGE_NAME_PREFIX = 'things4it_category_image_generation_';
     private const CATEGORY_IMAGE_GENERATION_CRON_JOB = 'things4it_category_image_generation_cronjob';
 
     /**

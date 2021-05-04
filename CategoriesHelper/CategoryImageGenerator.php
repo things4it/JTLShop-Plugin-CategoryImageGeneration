@@ -4,10 +4,15 @@
 namespace Plugin\t4it_category_image_generation\CategoriesHelper;
 
 
-use Plugin\t4it_category_image_generation\Bootstrap;
-
 class CategoryImageGenerator
 {
+
+    private const CATEGORY_IMAGE_NAME_PREFIX = 't4it_cig_generated_';
+
+    public static function getImageNamePrefix(): string
+    {
+        return self::CATEGORY_IMAGE_NAME_PREFIX;
+    }
 
     /**
      * @param int $categoryId
@@ -67,7 +72,7 @@ class CategoryImageGenerator
 
         }
 
-        $targetImageName = Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . $categoryId . '.png';
+        $targetImageName = self::CATEGORY_IMAGE_NAME_PREFIX . $categoryId . '.png';
         $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
         \imagecropauto($categoryImage);
         \imagepng($categoryImage, $targetImagePath);
@@ -78,12 +83,11 @@ class CategoryImageGenerator
 
     public static function removeGeneratedImages()
     {
-        $categoryImageFiles = glob(\PFAD_ROOT . \STORAGE_CATEGORIES . Bootstrap::CATEGORY_IMAGE_NAME_PREFIX . '*.png');
+        $categoryImageFiles = glob(\PFAD_ROOT . \STORAGE_CATEGORIES . self::CATEGORY_IMAGE_NAME_PREFIX . '*.png');
         foreach ($categoryImageFiles as $categoryImageFile) {
             if (file_exists($categoryImageFile) && !is_dir($categoryImageFile)) {
                 unlink($categoryImageFile);
             }
-
         }
     }
 
