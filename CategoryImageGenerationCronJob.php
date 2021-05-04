@@ -1,14 +1,14 @@
 <?php
 
-namespace Plugin\things4it_category_image_generation;
+namespace Plugin\t4it_category_image_generation;
 
 use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
-use Plugin\things4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
-use Plugin\things4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
-use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
-use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
+use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
+use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
+use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
 
 /**
  * Class CategoryImageGenerationCronJob

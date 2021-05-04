@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Plugin\things4it_category_image_generation\Migrations;
+namespace Plugin\t4it_category_image_generation\Migrations;
 
 use JTL\Plugin\Migration;
 use JTL\Update\IMigration;

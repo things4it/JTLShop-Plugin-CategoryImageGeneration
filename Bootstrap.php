@@ -4,13 +4,13 @@
  * @author  Johannes Wendig
  */
 
-namespace Plugin\things4it_category_image_generation;
+namespace Plugin\t4it_category_image_generation;
 
 use JTL\Events\Dispatcher;
 use JTL\Events\Event;
 use JTL\Plugin\Bootstrapper;
-use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
-use Plugin\things4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
+use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
 
 /**
  * Class Bootstrap

@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugin\things4it_category_image_generation\CategoriesCronJobQueue;
+namespace Plugin\t4it_category_image_generation\CategoriesCronJobQueue;
 
 use DbInterface;
 use JTL\DB\ReturnType;
