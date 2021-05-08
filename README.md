@@ -21,8 +21,3 @@ php-gd support for jpeg, png, gif, ...
 
 For example:
 ``apt install php7.4-gd``
-
-## TODOs
-
-* check deletion of generated images at uninstall -> maybe delete it manually
-* implement enable/disable feature
