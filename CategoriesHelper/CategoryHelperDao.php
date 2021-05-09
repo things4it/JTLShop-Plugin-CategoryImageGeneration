@@ -128,5 +128,29 @@ class CategoryHelperDao
         }
     }
 
+    public static function removeGeneratedImage(int $categoryId, DbInterface $db): void
+    {
+        $categoryIdsObjects = $db->queryPrepared("
+                    SELECT 
+                           kp.kKategorie 
+                    FROM tkategoriepict kp 
+                    WHERE 
+                          kp.kKategorie = :categoryId
+                          AND kp.cPfad LIKE :pathPrefix",
+            [
+                'pathPrefix' => CategoryImageGenerator::getImageNamePrefix() . '%',
+                'categoryId' => $categoryId
+            ],
+            ReturnType::ARRAY_OF_OBJECTS);
+
+        $categoryIds = \array_map(function ($o) {
+            return $o->kKategorie;
+        }, $categoryIdsObjects);
+
+        foreach ($categoryIds as $categoryId) {
+            $db->delete('tkategoriepict', 'kKategorie', $categoryId);
+        }
+    }
+
 
 }
