@@ -6,9 +6,15 @@
 
 namespace Plugin\t4it_category_image_generation;
 
+use JTL\Alert\Alert;
 use JTL\Events\Dispatcher;
 use JTL\Events\Event;
+use JTL\Helpers\Form;
+use JTL\Helpers\Request;
+use JTL\Media\Image\Category;
 use JTL\Plugin\Bootstrapper;
+use JTL\Shop;
+use JTL\Smarty\JTLSmarty;
 use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
 
@@ -67,6 +73,40 @@ class Bootstrap extends Bootstrapper
         }
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function renderAdminMenuTab(string $tabName, int $menuID, JTLSmarty $smarty): string
+    {
+        $smarty->assign('menuID', $menuID)->assign('posted', null);
+        $plugin = $this->getPlugin();
+
+        if ($tabName === 'Bild neu generieren') {
+            if (!empty($_POST) && Form::validateToken()) {
+                $categoryId = Request::postInt('categoryId');
+
+                $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $this->getDB());
+                $randomArticleImagesCount = sizeof($randomArticleImages);
+                if ($randomArticleImagesCount > 0) {
+                    CategoryHelperDao::removeGeneratedImage($categoryId, $this->getDB());
+                    CategoryImageGenerator::removeGeneratedImage($categoryId);
+
+                    $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
+                    CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->getDB());
+
+                    Category::clearCache($categoryId);
+
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('Successfully re-generated image.'), 'succReGenerate');
+                } else {
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('Could not re-generate image for - no articles with images found.'), 'errReGenerate');
+                }
+            }
+
+        }
+
+        return $smarty->assign('adminURL', Shop::getURL() . '/' . \PFAD_ADMIN . 'plugin.php?kPlugin=' . $plugin->getID()
+        )->fetch($this->getPlugin()->getPaths()->getAdminPath() . '/templates/re-generate.tpl');
+    }
 
     private function addCron(): void
     {

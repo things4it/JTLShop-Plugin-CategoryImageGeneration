@@ -13,6 +13,9 @@
     <CreateDate>2021-03-30</CreateDate>
     <Install>
         <Adminmenu>
+            <Customlink sort="1">
+                <Name>Bild neu generieren</Name>
+            </Customlink>
         </Adminmenu>
     </Install>
 </jtlshopplugin>
