@@ -5,6 +5,7 @@ namespace Plugin\t4it_category_image_generation;
 use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
+use JTL\Media\Image\Category;
 use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
 use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
 use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
@@ -74,6 +75,7 @@ class CategoryImageGenerationCronJob extends Job
         if ($randomArticleImagesCount > 0) {
             $categoryImagePath = CategoryImageGenerator::generateCategoryImage($category->getKKategorie(), $randomArticleImages);
             CategoryHelperDao::saveCategoryImage($category->getKKategorie(), $categoryImagePath, $this->db);
+            Category::clearCache($category->getKKategorie());
 
             $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $category->getKKategorie()));
         } else {
