@@ -81,9 +81,13 @@ class Bootstrap extends Bootstrapper
         $smarty->assign('menuID', $menuID)->assign('posted', null);
         $plugin = $this->getPlugin();
 
+        // TODO: extract into "controller/handler" !?
         if ($tabName === 'Bild neu generieren') {
+            // TODO: handle invalid token
             if (!empty($_POST) && Form::validateToken()) {
                 $categoryId = Request::postInt('categoryId');
+
+                // TODO: validate given categoryId ...
 
                 $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $this->getDB());
                 $randomArticleImagesCount = sizeof($randomArticleImages);
@@ -101,8 +105,9 @@ class Bootstrap extends Bootstrapper
                     Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('Could not re-generate image for - no articles with images found.'), 'errReGenerate');
                 }
             }
-
         }
+
+        $smarty->assign('API_URL', $plugin->getPaths()->getAdminURL() . "/api.php");
 
         return $smarty->assign('adminURL', Shop::getURL() . '/' . \PFAD_ADMIN . 'plugin.php?kPlugin=' . $plugin->getID()
         )->fetch($this->getPlugin()->getPaths()->getAdminPath() . '/templates/re-generate.tpl');
