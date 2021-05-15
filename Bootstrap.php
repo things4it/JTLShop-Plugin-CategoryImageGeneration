@@ -95,7 +95,8 @@ class Bootstrap extends Bootstrapper
                     CategoryHelperDao::removeGeneratedImage($categoryId, $this->getDB());
                     CategoryImageGenerator::removeGeneratedImage($categoryId);
 
-                    $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
+                    $backgroundTransparent = $plugin->getConfig()->getValue('t4it_category_image_generation_background_color') == 'trans';
+                    $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages, $backgroundTransparent);
                     CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->getDB());
 
                     Category::clearCache($categoryId);

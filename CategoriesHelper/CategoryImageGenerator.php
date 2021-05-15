@@ -17,11 +17,12 @@ class CategoryImageGenerator
     /**
      * @param int $categoryId
      * @param Image[] $productImages
+     * @param bool $backgroundTransparent
      * @return string
      */
-    public static function generateCategoryImage(int $categoryId, array $productImages): string
+    public static function generateCategoryImage(int $categoryId, array $productImages, bool $backgroundTransparent): string
     {
-        $categoryImage = self::createTransparentImage(1024, 1024);
+        $categoryImage = self::createImage(1024, 1024, $backgroundTransparent);
 
         $productImagesCount = sizeof($productImages);
         if ($productImagesCount == 3) {
@@ -29,7 +30,7 @@ class CategoryImageGenerator
             foreach ($productImages as $productImage) {
                 $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
                 if (\file_exists($sourceImagePath)) {
-                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500);
+                    $image = self::getResizedArticleImage($sourceImagePath, $backgroundTransparent, 500, 500);
                     if ($imageNumber == 0) {
                         \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
                     } elseif ($imageNumber == 1) {
@@ -48,7 +49,7 @@ class CategoryImageGenerator
             foreach ($productImages as $productImage) {
                 $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
                 if (\file_exists($sourceImagePath)) {
-                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500);
+                    $image = self::getResizedArticleImage($sourceImagePath, $backgroundTransparent, 500, 500);
                     if ($imageNumber == 0) {
                         \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
                     } else {
@@ -65,7 +66,7 @@ class CategoryImageGenerator
 
             $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
             if (\file_exists($sourceImagePath)) {
-                $image = self::getResizedArticleImage($sourceImagePath, 1024, 1024);
+                $image = self::getResizedArticleImage($sourceImagePath, $backgroundTransparent, 1024, 1024);
                 \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
                 \imagedestroy($image);
             }
@@ -104,15 +105,22 @@ class CategoryImageGenerator
     /**
      * @param int $width
      * @param int $height
+     * @param bool $backgroundTransparent
      * @return false|\GdImage|resource
      */
-    private static function createTransparentImage(int $width, int $height)
+    private static function createImage(int $width, int $height, bool $backgroundTransparent)
     {
         $image = \imagecreatetruecolor($width, $height);
-        $colorTransparent = \imagecolorallocatealpha($image, 0, 0, 0, 127);
-        \imagefill($image, 0, 0, $colorTransparent);
-        \imagealphablending($image, true);
-        \imagesavealpha($image, true);
+
+        if ($backgroundTransparent) {
+            $colorTransparent = \imagecolorallocatealpha($image, 0, 0, 0, 127);
+            \imagefill($image, 0, 0, $colorTransparent);
+            \imagealphablending($image, true);
+            \imagesavealpha($image, true);
+        } else {
+            $colorWhite = \imagecolorallocate($image, 255, 255, 255);
+            \imagefill($image, 0, 0, $colorWhite);
+        }
 
         return $image;
     }
@@ -120,11 +128,12 @@ class CategoryImageGenerator
 
     /**
      * @param string $originalImagePath
+     * @param bool $backgroundTransparent
      * @param int $targetWidth
      * @param int $targetHeight
      * @return false|\GdImage|resource
      */
-    private static function getResizedArticleImage(string $originalImagePath, int $targetWidth = 640, int $targetHeight = 640)
+    private static function getResizedArticleImage(string $originalImagePath, bool $backgroundTransparent, int $targetWidth = 640, int $targetHeight = 640)
     {
         list($originalImageWidth, $originalImageHeight, $originalImageType) = \getimagesize($originalImagePath);
         switch ($originalImageType) {
@@ -152,7 +161,7 @@ class CategoryImageGenerator
         $offsetX = ($targetWidth - $newWidth) / 2;
         $offsetY = ($targetHeight - $newHeight) / 2;
 
-        $imageResized = self::createTransparentImage($targetWidth, $targetHeight);
+        $imageResized = self::createImage($targetWidth, $targetHeight, $backgroundTransparent);
         \imagecopyresampled($imageResized, $imageOriginal, $offsetX, $offsetY, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
         \imagedestroy($imageOriginal);
 

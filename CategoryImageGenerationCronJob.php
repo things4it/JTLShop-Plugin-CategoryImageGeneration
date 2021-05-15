@@ -6,6 +6,7 @@ use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
 use JTL\Media\Image\Category;
+use JTL\Plugin\Helper;
 use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
 use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
 use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
@@ -25,6 +26,13 @@ class CategoryImageGenerationCronJob extends Job
     {
         parent::start($queueEntry);
 
+        $plugin = Helper::getPluginById('t4it_category_image_generation');
+        if ($plugin === null) {
+            $this->logger->warning('Could not find T4IT Category Image Generation plugin');
+
+            return $this;
+        }
+
         if ($queueEntry->taskLimit === 0) {
             $queueEntry->taskLimit = $this->initCronJobQueue();
             $this->logger->info(\sprintf('Category-Image-Generation-CronJob: started - initialize queue with %s categories without image', $queueEntry->taskLimit));
@@ -32,7 +40,7 @@ class CategoryImageGenerationCronJob extends Job
             $this->logger->info(\sprintf('Category-Image-Generation-CronJob: continue queue processing - remaining categories: %s', $queueEntry->taskLimit));
         }
 
-        $this->generateCategoryImagesForNextChunk();
+        $this->generateCategoryImagesForNextChunk($plugin->getConfig()->getValue('t4it_category_image_generation_background_color') == 'trans');
         $queueEntry->taskLimit = CategoryCronJobQueueDao::count($this->db);
         if ($queueEntry->taskLimit == 0) {
             $this->logger->info('Category-Image-Generation-CronJob: finished');
@@ -57,23 +65,24 @@ class CategoryImageGenerationCronJob extends Job
         return sizeof($categoriesWithoutImage);
     }
 
-    private function generateCategoryImagesForNextChunk()
+    private function generateCategoryImagesForNextChunk(bool $backgroundTransparent)
     {
         $categories = CategoryCronJobQueueDao::findByLimit($this->db, 120);
         foreach ($categories as $category) {
-            $this->handleCategory($category);
+            $this->handleCategory($category, $backgroundTransparent);
         }
     }
 
     /**
      * @param CategoryCronJobEntry $category
+     * @param bool $backgroundTransparent
      */
-    private function handleCategory(CategoryCronJobEntry $category): void
+    private function handleCategory(CategoryCronJobEntry $category, bool $backgroundTransparent): void
     {
         $randomArticleImages = CategoryHelperDao::findRandomArticleImages($category->getKKategorie(), $this->db);
         $randomArticleImagesCount = sizeof($randomArticleImages);
         if ($randomArticleImagesCount > 0) {
-            $categoryImagePath = CategoryImageGenerator::generateCategoryImage($category->getKKategorie(), $randomArticleImages);
+            $categoryImagePath = CategoryImageGenerator::generateCategoryImage($category->getKKategorie(), $randomArticleImages, $backgroundTransparent);
             CategoryHelperDao::saveCategoryImage($category->getKKategorie(), $categoryImagePath, $this->db);
             Category::clearCache($category->getKKategorie());
 
