@@ -6,15 +6,21 @@ use JTL\DB\DbInterface;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
-class CategoryImageGenerationService
-{
 
+interface CategoryImageGenerationServiceInterface
+{
     /**
      * @param int $categoryId
      * @param DbInterface $db
      * @throws \Exception
      */
-    public static function generateCategoryImage(int $categoryId, DbInterface $db)
+    public function generateCategoryImage(int $categoryId, DbInterface $db);
+}
+
+class CategoryImageGenerationService implements CategoryImageGenerationServiceInterface
+{
+
+    public function generateCategoryImage(int $categoryId, DbInterface $db)
     {
         $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $db);
         $randomArticleImagesCount = sizeof($randomArticleImages);
@@ -27,5 +33,6 @@ class CategoryImageGenerationService
         }
 
     }
+
 
 }
