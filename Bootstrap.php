@@ -11,12 +11,12 @@ use JTL\Events\Dispatcher;
 use JTL\Events\Event;
 use JTL\Helpers\Form;
 use JTL\Helpers\Request;
-use JTL\Media\Image\Category;
 use JTL\Plugin\Bootstrapper;
 use JTL\Shop;
 use JTL\Smarty\JTLSmarty;
 use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -90,20 +90,12 @@ class Bootstrap extends Bootstrapper
 
                 // TODO: validate given categoryId ...
 
-                $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $this->getDB());
-                $randomArticleImagesCount = sizeof($randomArticleImages);
-                if ($randomArticleImagesCount > 0) {
-                    CategoryHelperDao::removeGeneratedImage($categoryId, $this->getDB());
-                    CategoryImageGenerator::removeGeneratedImage($categoryId);
+                try {
+                    CategoryImageGenerationService::generateCategoryImage($categoryId, $this->getDB());
 
-                    $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
-                    CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->getDB());
-
-                    Category::clearCache($categoryId);
-
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('Successfully re-generated image.'), 'succReGenerate');
-                } else {
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('Could not re-generate image for - no articles with images found.'), 'errReGenerate');
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, sprintf('Successfully re-generated image for category %s', $categoryId), 'succReGenerate');
+                } catch (\Exception $e) {
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, sprintf('Could not re-generate image for %s: %s', $categoryId, $e->getMessage()), 'errReGenerate');
                 }
             }
         }

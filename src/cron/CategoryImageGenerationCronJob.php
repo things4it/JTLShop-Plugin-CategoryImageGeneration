@@ -5,11 +5,9 @@ namespace Plugin\t4it_category_image_generation\src\cron;
 use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
-use JTL\Media\Image\Category;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryCronJobQueueDao;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
-use Plugin\t4it_category_image_generation\src\db\entity\CategoryCronJobEntry;
-use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
+use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 
 /**
  * Class CategoryImageGenerationCronJob
@@ -61,28 +59,15 @@ class CategoryImageGenerationCronJob extends Job
     {
         $categories = CategoryCronJobQueueDao::findByLimit($this->db, 120);
         foreach ($categories as $category) {
-            $this->handleCategory($category);
+            try {
+                CategoryImageGenerationService::generateCategoryImage($category->getKKategorie(), $this->db);
+                $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $category->getKKategorie()));
+            } catch (\Exception $e) {
+                $this->logger->warning(sprintf('Category-Image-Generation-CronJob: Could not create image for category %s:  %s', $category->getKKategorie(), $e->getMessage()));
+            }
+
+            CategoryCronJobQueueDao::delete($category->getKKategorie(), $this->db);
         }
-    }
-
-    /**
-     * @param CategoryCronJobEntry $category
-     */
-    private function handleCategory(CategoryCronJobEntry $category): void
-    {
-        $randomArticleImages = CategoryHelperDao::findRandomArticleImages($category->getKKategorie(), $this->db);
-        $randomArticleImagesCount = sizeof($randomArticleImages);
-        if ($randomArticleImagesCount > 0) {
-            $categoryImagePath = CategoryImageGenerator::generateCategoryImage($category->getKKategorie(), $randomArticleImages);
-            CategoryHelperDao::saveCategoryImage($category->getKKategorie(), $categoryImagePath, $this->db);
-            Category::clearCache($category->getKKategorie());
-
-            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $category->getKKategorie()));
-        } else {
-            $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Could not create image for category %s - no articles with images found', $category->getKKategorie()));
-        }
-
-        CategoryCronJobQueueDao::delete($category->getKKategorie(), $this->db);
     }
 
 }
