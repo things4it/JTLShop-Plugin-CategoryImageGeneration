@@ -17,6 +17,7 @@ use JTL\Smarty\JTLSmarty;
 use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
+use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -34,6 +35,11 @@ class Bootstrap extends Bootstrapper
     public function boot(Dispatcher $dispatcher): void
     {
         parent::boot($dispatcher);
+
+        $container = Shop::Container();
+        $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
+            return new CategoryImageGenerationService();
+        });
 
         $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {
             if ($args['type'] === self::CATEGORY_IMAGE_GENERATION_CRON_JOB) {
@@ -91,7 +97,8 @@ class Bootstrap extends Bootstrapper
                 // TODO: validate given categoryId ...
 
                 try {
-                    CategoryImageGenerationService::generateCategoryImage($categoryId, $this->getDB());
+                    $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
+                    $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId, $this->getDB());
 
                     Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, sprintf('Successfully re-generated image for category %s', $categoryId), 'succReGenerate');
                 } catch (\Exception $e) {
