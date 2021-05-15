@@ -4,14 +4,14 @@ namespace Plugin\t4it_category_image_generation\src\db\dao;
 
 use DbInterface;
 use JTL\DB\ReturnType;
-use Plugin\t4it_category_image_generation\src\db\entity\CategoryCronJobEntry;
+use Plugin\t4it_category_image_generation\src\db\entity\Category;
 
 class CategoryCronJobQueueDao
 {
     /**
      * @param DbInterface $db
      * @param int $limit
-     * @return CategoryCronJobEntry[]
+     * @return Category[]
      */
     public static function findByLimit(DbInterface $db, int $limit = 120): array
     {
@@ -25,7 +25,7 @@ class CategoryCronJobQueueDao
 
         $categoriesWithoutImage = array();
         foreach ($resultObjects as $resultObject) {
-            $categoryWithoutImage = new CategoryCronJobEntry();
+            $categoryWithoutImage = new Category();
             $categoryWithoutImage->setKKategorie($resultObject->kKategorie);
 
             array_push($categoriesWithoutImage, $categoryWithoutImage);
