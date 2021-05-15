@@ -62,7 +62,7 @@ class CategoryImageGenerationCronJob extends Job
         $categories = CategoryCronJobQueueDao::findByLimit($this->db, 120);
         foreach ($categories as $category) {
             try {
-                $categoryImageGenerationServiceInterface->generateCategoryImage($category->getKKategorie(), $this->db);
+                $categoryImageGenerationServiceInterface->generateCategoryImage($category->getKKategorie());
 
                 $this->logger->debug(sprintf('Category-Image-Generation-CronJob: Image for category %s created', $category->getKKategorie()));
             } catch (\Exception $e) {

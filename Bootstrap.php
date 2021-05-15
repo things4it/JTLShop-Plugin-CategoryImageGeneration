@@ -38,7 +38,7 @@ class Bootstrap extends Bootstrapper
 
         $container = Shop::Container();
         $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
-            return new CategoryImageGenerationService();
+            return new CategoryImageGenerationService($this->getDB());
         });
 
         $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {
@@ -98,7 +98,7 @@ class Bootstrap extends Bootstrapper
 
                 try {
                     $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
-                    $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId, $this->getDB());
+                    $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId);
 
                     Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, sprintf('Successfully re-generated image for category %s', $categoryId), 'succReGenerate');
                 } catch (\Exception $e) {
