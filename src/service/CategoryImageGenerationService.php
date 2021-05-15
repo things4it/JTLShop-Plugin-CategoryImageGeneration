@@ -11,22 +11,33 @@ interface CategoryImageGenerationServiceInterface
 {
     /**
      * @param int $categoryId
-     * @param DbInterface $db
      * @throws \Exception
      */
-    public function generateCategoryImage(int $categoryId, DbInterface $db);
+    public function generateCategoryImage(int $categoryId);
 }
 
 class CategoryImageGenerationService implements CategoryImageGenerationServiceInterface
 {
 
-    public function generateCategoryImage(int $categoryId, DbInterface $db)
+    private DbInterface $db;
+
+    /**
+     * CategoryImageGenerationService constructor.
+     * @param DbInterface $db
+     */
+    public function __construct(DbInterface $db)
     {
-        $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $db);
+        $this->db = $db;
+    }
+
+
+    public function generateCategoryImage(int $categoryId)
+    {
+        $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $this->db);
         $randomArticleImagesCount = sizeof($randomArticleImages);
         if ($randomArticleImagesCount > 0) {
             $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
-            CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $db);
+            CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->db);
             \JTL\Media\Image\Category::clearCache($categoryId);
         } else {
             throw new \Exception(sprintf('No articles with images found for category %s', $categoryId));
