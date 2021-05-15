@@ -1,8 +1,8 @@
 <?php
 
-namespace Plugin\t4it_category_image_generation\CategoriesHelper;
+namespace Plugin\t4it_category_image_generation\src\db\entity;
 
-class Category
+class CategoryCronJobEntry
 {
 
     private int $kKategorie;

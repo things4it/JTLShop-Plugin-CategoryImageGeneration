@@ -1,9 +1,12 @@
 <?php
 
-namespace Plugin\t4it_category_image_generation\CategoriesHelper;
+namespace Plugin\t4it_category_image_generation\src\db\dao;
 
 use DbInterface;
 use JTL\DB\ReturnType;
+use Plugin\t4it_category_image_generation\src\db\entity\Category;
+use Plugin\t4it_category_image_generation\src\db\entity\Image;
+use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 class CategoryHelperDao
 {
