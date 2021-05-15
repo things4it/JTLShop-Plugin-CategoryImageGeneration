@@ -1,9 +1,10 @@
 <?php
 
-namespace Plugin\t4it_category_image_generation\CategoriesCronJobQueue;
+namespace Plugin\t4it_category_image_generation\src\db\dao;
 
 use DbInterface;
 use JTL\DB\ReturnType;
+use Plugin\t4it_category_image_generation\src\db\entity\CategoryCronJobEntry;
 
 class CategoryCronJobQueueDao
 {

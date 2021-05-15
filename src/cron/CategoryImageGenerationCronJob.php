@@ -1,15 +1,15 @@
 <?php
 
-namespace Plugin\t4it_category_image_generation;
+namespace Plugin\t4it_category_image_generation\src\cron;
 
 use JTL\Cron\Job;
 use JTL\Cron\JobInterface;
 use JTL\Cron\QueueEntry;
 use JTL\Media\Image\Category;
-use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobEntry;
-use Plugin\t4it_category_image_generation\CategoriesCronJobQueue\CategoryCronJobQueueDao;
-use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
-use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
+use Plugin\t4it_category_image_generation\src\db\dao\CategoryCronJobQueueDao;
+use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\db\entity\CategoryCronJobEntry;
+use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
  * Class CategoryImageGenerationCronJob

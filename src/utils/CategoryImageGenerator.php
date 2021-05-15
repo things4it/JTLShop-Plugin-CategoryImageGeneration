@@ -1,8 +1,10 @@
 <?php
 
 
-namespace Plugin\t4it_category_image_generation\CategoriesHelper;
+namespace Plugin\t4it_category_image_generation\src\utils;
 
+
+use Plugin\t4it_category_image_generation\src\db\entity\Image;
 
 class CategoryImageGenerator
 {

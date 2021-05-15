@@ -15,8 +15,9 @@ use JTL\Media\Image\Category;
 use JTL\Plugin\Bootstrapper;
 use JTL\Shop;
 use JTL\Smarty\JTLSmarty;
-use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryHelperDao;
-use Plugin\t4it_category_image_generation\CategoriesHelper\CategoryImageGenerator;
+use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
+use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
  * Class Bootstrap
