@@ -48,3 +48,6 @@ msgstr "Category image successful generated for category %s"
 
 msgid "admin.regenerate.common.error"
 msgstr "Could not generate category image for category %s: %s"
+
+msgid "admin.regenerate.common.csrf-error.message"
+msgstr "Invalid CSRF-Token - Please refresh the page"

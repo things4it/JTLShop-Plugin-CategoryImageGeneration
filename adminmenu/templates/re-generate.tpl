@@ -83,14 +83,15 @@
             $.each(response, function (key, value) {
                 $reGenBySearchCategorySelect.append('<option value="' + key + '" selected="selected">' + value + '</option>');
             });
+        }).fail((error) => {
+            alert(error.responseJSON.message);
         }).always(() => {
             $reGenBySearchCategorySelect.prop('disabled', false);
         });
-
-        // TODO: post error case ...
     };
 
     $(document).ready(() => {
+        $reGenBySearchForm.find('#search').on('click', () => executeSearch());
         $reGenBySearchCategoryNameInput.on('keydown', (event) => {
             if (event.key === 'Enter' || event.keyCode === 13) {
                 executeSearch();
@@ -98,10 +99,7 @@
                 event.preventDefault();
                 return false;
             }
-
         });
-
-        $reGenBySearchForm.find('#search').on('click', () => executeSearch());
     });
 
 </script>

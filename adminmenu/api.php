@@ -8,6 +8,8 @@ if (!defined('PFAD_ROOT')) {
 }
 global $plugin;
 
+\header('Content-Type: application/json');
+
 if (Form::validateToken()) {
     $db = Shop::Container()->getDB();
     $categoryName = \JTL\Helpers\Request::postVar('categoryName');
@@ -18,9 +20,17 @@ if (Form::validateToken()) {
     foreach ($categories as $category) {
         $data[$category->kKategorie] = $category->cName;
     }
+
+    \http_response_code(200);
+    echo \json_encode($data);
 } else {
-    // TODO
+    \http_response_code(403);
+
+    $error = [
+        'message' => __('admin.regenerate.common.csrf-error.message')
+    ];
+
+    echo \json_encode($error);
 }
 
-\header('Content-Type: application/json');
-echo \json_encode($data);
+
