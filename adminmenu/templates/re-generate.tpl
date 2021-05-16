@@ -64,28 +64,44 @@
 </div>
 
 <script type="text/javascript">
-    $reGenBySearchForm = $('form[name="cig_regen_by_search"]');
-    $reGenBySearchCategorySelect = $reGenBySearchForm.find('select[name="categoryId"]');
+    let $reGenBySearchForm = $('form[name="cig_regen_by_search"]');
+    let $reGenBySearchCategoryNameInput = $reGenBySearchForm.find('input[name="categoryName"]');
+    let $reGenBySearchCategorySelect = $reGenBySearchForm.find('select[name="categoryId"]');
 
-    $reGenBySearchForm.find('#search').click(function () {
-        let categoryName = $reGenBySearchForm.find('input[name="categoryName"]').val();
+    function executeSearch() {
+        $reGenBySearchCategorySelect.prop('disabled', true);
 
-        $.post(
-            '{$API_URL}',
-            {
-                jtl_token: '{$smarty.session.jtl_token}',
-                categoryName: categoryName
-            },
-            function (response) {
-                $reGenBySearchCategorySelect.empty()
+        let categoryName = $reGenBySearchCategoryNameInput.val();
 
-                $.each(response, function (key, value) {
-                    $reGenBySearchCategorySelect.append('<option value="' + key + '" selected="selected">' + value + '</option>');
-                });
-            }
-        );
+        $.post('{$API_URL}', {
+            jtl_token: '{$smarty.session.jtl_token}',
+            categoryName: categoryName
+
+        }).done((response) => {
+            $reGenBySearchCategorySelect.empty()
+
+            $.each(response, function (key, value) {
+                $reGenBySearchCategorySelect.append('<option value="' + key + '" selected="selected">' + value + '</option>');
+            });
+        }).always(() => {
+            $reGenBySearchCategorySelect.prop('disabled', false);
+        });
 
         // TODO: post error case ...
+    };
+
+    $(document).ready(() => {
+        $reGenBySearchCategoryNameInput.on('keydown', (event) => {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                executeSearch();
+
+                event.preventDefault();
+                return false;
+            }
+
+        });
+
+        $reGenBySearchForm.find('#search').on('click', () => executeSearch());
     });
 
 </script>
