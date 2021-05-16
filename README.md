@@ -1,11 +1,23 @@
 # Category-Image-Generation
 
-Plugin which generates images for categories which doesnt have a image - based on three random products of the category
-and their subcategories (down to 5th level).
+This plugin generates images for categories which doesn't have a image.
 
-By default - images will be checked every day at 00:00.
+The generated image is based on three random products of the category and their subcategories (down to 5th level).
 
-The plugin uses the jtl-shop tables for the images - no custom mechanism was provided for image handling
+By default missing images will be checked every day at 00:00 via cron-job.
+
+The plugin is using the jtl-shop default tables for the images
+
+* no custom mechanism was provided for image handling
+* no performance impact
+* configured images via jtl-wawi will win
+
+## Re-Generate images for specific categories
+
+You can generate images for specific categories via the plugin settings tab "Bild neu generieren (einzeln)"/"Re-Create a
+category image".
+
+**Note**: if you "override" a image which was provided by the jtl-wawi sync - it will be overridden by the next sync.
 
 ## Supported image types
 
@@ -17,7 +29,8 @@ Article images could be type of
 
 ## Requirements
 
-php-gd support for jpeg, png, gif, ...
+### PHP-DB
 
-For example:
-``apt install php7.4-gd``
+PHP-GD have to be installed ...
+
+For example: ``apt install php7.4-gd``
