@@ -89,7 +89,7 @@ class Bootstrap extends Bootstrapper
         $plugin = $this->getPlugin();
 
         // TODO: extract into "controller/handler" !?
-        if ($tabName === 'Bild neu generieren') {
+        if ($tabName === 'Bild neu generieren (einzeln)') {
             // TODO: handle invalid token
             if (!empty($_POST) && Form::validateToken()) {
                 $categoryId = Request::postInt('categoryId');
@@ -100,9 +100,9 @@ class Bootstrap extends Bootstrapper
                     $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
                     $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId);
 
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, sprintf('Successfully re-generated image for category %s', $categoryId), 'succReGenerate');
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.regenerate.common.success', $categoryId), 'succReGenerate');
                 } catch (\Exception $e) {
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, sprintf('Could not re-generate image for %s: %s', $categoryId, $e->getMessage()), 'errReGenerate');
+                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('admin.regenerate.common.error', $categoryId, $e->getMessage()), 'errReGenerate');
                 }
             }
         }

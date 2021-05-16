@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jtlshopplugin>
     <Name>Kategorie Bild generierung</Name>
-    <Description>Generiert Bilder für Kategorien auf Basis deren Artikeln</Description>
+    <Description>Generiert Kategorie-Bilder auf Basis deren Artikeln</Description>
     <Author>Johannes Wendig</Author>
     <URL>http://www.things4it.de</URL>
     <PluginID>t4it_category_image_generation</PluginID>
@@ -14,7 +14,7 @@
     <Install>
         <Adminmenu>
             <Customlink sort="1">
-                <Name>Bild neu generieren</Name>
+                <Name>Bild neu generieren (einzeln)</Name>
             </Customlink>
         </Adminmenu>
     </Install>
