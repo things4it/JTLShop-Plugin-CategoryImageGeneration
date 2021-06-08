@@ -22,9 +22,6 @@ msgstr "Generate category images"
 msgid "admin.regenerate.description"
 msgstr "Here you can regenerate or overwrite the category image for individual categories."
 
-msgid "admin.regenerate.cache-hint"
-msgstr "If the template cache is enabled, the generated image will not be displayed directly if the category did not have an image before. If this is the case, you simply have to clear the template cache manually."
-
 ## by id
 msgid "admin.regenerate.by-id.title"
 msgstr "By category-id"

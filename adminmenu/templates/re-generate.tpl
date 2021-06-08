@@ -1,5 +1,4 @@
 <p>{__('admin.regenerate.description')}</p>
-<p>{__('admin.regenerate.cache-hint')}</p>
 
 <div class="first">
     <div class="subheading1">{__('admin.regenerate.by-id.title')}</div>

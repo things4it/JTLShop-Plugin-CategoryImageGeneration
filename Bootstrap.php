@@ -100,6 +100,8 @@ class Bootstrap extends Bootstrapper
                     $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
                     $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId);
 
+                    Shop::Cache()->flushTags(\CACHING_GROUP_CATEGORY);
+
                     Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.regenerate.common.success', $categoryId), 'succReGenerate');
                 } catch (\Exception $e) {
                     Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('admin.regenerate.common.error', $categoryId, $e->getMessage()), 'errReGenerate');

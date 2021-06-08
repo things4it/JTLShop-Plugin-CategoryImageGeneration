@@ -3,8 +3,7 @@
 This plugin generates images for categories which doesn't have a image.
 
 The generated image is based on three random products of the category and their subcategories (down to 5th level). By
-default missing images will be checked every day at 00:00 via cron-job. To see the generated images directly, you have
-to clear the template-cache manually if enabled.
+default missing images will be checked every day at 00:00 via cron-job.
 
 The plugin uses the jtl-shop default tables for the images
 * no custom mechanism was provided for image handling

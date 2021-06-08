@@ -3,6 +3,7 @@
 namespace Plugin\t4it_category_image_generation\src\service;
 
 use JTL\DB\DbInterface;
+use JTL\Media\Image\Category;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
@@ -38,7 +39,8 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
         if ($randomArticleImagesCount > 0) {
             $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
             CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->db);
-            \JTL\Media\Image\Category::clearCache($categoryId);
+
+            Category::clearCache($categoryId);
         } else {
             throw new \Exception(sprintf('No articles with images found for category %s', $categoryId));
         }
