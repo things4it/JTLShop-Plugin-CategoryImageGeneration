@@ -20,13 +20,18 @@ category image".
 ## Supported image types
 
 Article images could be type of
+
 * jpeg
 * gif
 * png
 
-## Requirements
+# Installation
 
-### PHP-DB
+## Plugin Upload
+
+Ensure the plugin-folder is named as ``t4it_category_image_generation``, zip and upload it via the Plugin-Manager :)
+
+## PHP-DB is required
 
 PHP-GD have to be installed ...
 
