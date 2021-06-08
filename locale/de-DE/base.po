@@ -19,6 +19,12 @@ msgstr "Kategoriebilder generieren"
 
 # adminmenu
 
+msgid "admin.regenerate.description"
+msgstr "Hier kannst du das Kategoriebild für einzelne Kategorien neu generieren bzw. überschreiben."
+
+msgid "admin.regenerate.cache-hint"
+msgstr "Falls der Template-Cache aktiviert ist wird das generierte Bild nicht direkt angezeigt wenn die Kategorie davor noch kein Bild hatte. Ist dies der Fall, musst du einfach den Template-Cache manuell leeren."
+
 ## by id
 msgid "admin.regenerate.by-id.title"
 msgstr "Direkt mit Kategorie-ID"
