@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
+use JTL\Catalog\Category\Kategorie;
 use JTL\DB\ReturnType;
+use JTL\Helpers\Category as CategoryHelper;
 use JTL\Helpers\Form;
 
 if (!defined('PFAD_ROOT')) {
@@ -12,13 +14,17 @@ global $plugin;
 
 if (Form::validateToken()) {
     $db = Shop::Container()->getDB();
+    $categoryHelper = CategoryHelper::getInstance();
+
     $categoryName = \JTL\Helpers\Request::postVar('categoryName');
-    $categories = $db->queryPrepared('SELECT * FROM tkategorie k WHERE k.cName LIKE (:search)',
+    $categoryResults = $db->queryPrepared('SELECT kKategorie FROM tkategorie k WHERE k.cName LIKE (:search)',
         ['search' => '%' . $categoryName . '%'],
         ReturnType::ARRAY_OF_OBJECTS);
+
     $data = array();
-    foreach ($categories as $category) {
-        $data[$category->kKategorie] = $category->cName;
+    foreach ($categoryResults as $categoryResult) {
+        $category = new Kategorie((int)$categoryResult->kKategorie);
+        $data[$category->getID()] = $categoryHelper->getPath($category);
     }
 
     \http_response_code(200);
