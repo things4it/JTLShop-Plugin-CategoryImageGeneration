@@ -91,7 +91,7 @@ class Bootstrap extends Bootstrapper
         // TODO: extract into "controller/handler" !?
         if ($tabName === 'Bild neu generieren (einzeln)') {
             // TODO: handle invalid token
-            if (!empty($_POST) && Form::validateToken()) {
+            if (!empty($_POST) && Request::postVar('code') == 're-generate' && Form::validateToken()) {
                 $categoryId = Request::postInt('categoryId');
 
                 // TODO: validate given categoryId ...

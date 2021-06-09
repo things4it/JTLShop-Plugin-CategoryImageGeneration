@@ -15,6 +15,30 @@
             <Customlink sort="1">
                 <Name>Bild neu generieren (einzeln)</Name>
             </Customlink>
+            <Settingslink sort="2">
+                <Setting type="text" initialValue="" sort="0" conf="N">
+                    <Name>Allgemein</Name>
+                    <ValueName>Spacer</ValueName>
+                    <Description>
+                        Die Einstellungen greifen nur für Kategorien für die noch kein Bild generiert wurde.
+                        Damit alle Bilder für Kategorien bei denen kein Bild über die Wawi gepflegt wurde auf basis der
+                        Einstellungen neu generiert werden muss das Plugin neu installiert werden.
+                    </Description>
+                </Setting>
+                <Name>Einstellungen</Name>
+                <Setting type="radio" initialValue="3" sort="1" conf="Y">
+                    <Name>Maximale Anzahl Artikelbilder</Name>
+                    <Description>Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds
+                        verwendet werden
+                    </Description>
+                    <ValueName>t4it_category_image_generation-maxArticleImagesPerCategory</ValueName>
+                    <RadioOptions>
+                        <Option value="1" sort="1">1</Option>
+                        <Option value="2" sort="2">2</Option>
+                        <Option value="3" sort="3">3</Option>
+                    </RadioOptions>
+                </Setting>
+            </Settingslink>
         </Adminmenu>
     </Install>
 </jtlshopplugin>

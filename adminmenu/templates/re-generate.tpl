@@ -7,6 +7,7 @@
     <form method="post">
         {$jtl_token}
         <input type="hidden" name="kPluginAdminMenu" value="{$menuID}">
+        <input type="hidden" name="code" value="re-generate">
 
         <div class="form-group form-row align-items-center">
             <label class="col col-sm-4  col-form-label text-sm-right"
@@ -32,6 +33,7 @@
     <form name="cig_regen_by_search" method="post">
         {$jtl_token}
         <input type="hidden" name="kPluginAdminMenu" value="{$menuID}">
+        <input type="hidden" name="code" value="re-generate">
 
         <div class="form-group form-row align-items-center">
             <label class="col col-sm-4  col-form-label text-sm-right"

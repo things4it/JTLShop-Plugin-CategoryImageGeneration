@@ -40,10 +40,11 @@ class CategoryHelperDao
 
     /**
      * @param int $categoryId
+     * @param int $maxArticleImages
      * @param DbInterface $db
      * @return Image[]
      */
-    public static function findRandomArticleImages(int $categoryId, DbInterface $db): array
+    public static function findRandomArticleImages(int $categoryId, int $maxArticleImages, DbInterface $db): array
     {
         $categoryPathsResult = $db->queryPrepared('
             SELECT
@@ -85,7 +86,7 @@ class CategoryHelperDao
                 WHERE
                     ka.kKategorie IN (' . join(',', $relevantCategoryIds) . ')
                 ORDER BY RAND()
-                LIMIT 3
+                LIMIT ' . $maxArticleImages . '
         ',
             ReturnType::ARRAY_OF_OBJECTS);
 
