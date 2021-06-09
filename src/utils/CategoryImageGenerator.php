@@ -31,7 +31,7 @@ class CategoryImageGenerator
             foreach ($productImages as $productImage) {
                 $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
                 if (\file_exists($sourceImagePath)) {
-                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500);
+                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500, 20);
                     if ($imageNumber == 0) {
                         \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
                     } elseif ($imageNumber == 1) {
@@ -124,9 +124,10 @@ class CategoryImageGenerator
      * @param string $originalImagePath
      * @param int $targetWidth
      * @param int $targetHeight
+     * @param int $padding
      * @return false|\GdImage|resource
      */
-    private static function getResizedArticleImage(string $originalImagePath, int $targetWidth = 640, int $targetHeight = 640)
+    private static function getResizedArticleImage(string $originalImagePath, int $targetWidth = 640, int $targetHeight = 640, int $padding = 15)
     {
         list($originalImageWidth, $originalImageHeight, $originalImageType) = \getimagesize($originalImagePath);
         switch ($originalImageType) {
@@ -148,8 +149,8 @@ class CategoryImageGenerator
             $scale = $targetHeight / $originalImageHeight;
         }
 
-        $newWidth = $originalImageWidth * $scale;
-        $newHeight = $originalImageHeight * $scale;
+        $newWidth = $originalImageWidth * $scale - $padding * 2;
+        $newHeight = $originalImageHeight * $scale - $padding * 2;
 
         $offsetX = ($targetWidth - $newWidth) / 2;
         $offsetY = ($targetHeight - $newHeight) / 2;
