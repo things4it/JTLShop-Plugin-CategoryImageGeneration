@@ -77,7 +77,9 @@ class CategoryHelperDao
                 SELECT
                      b.cPfad
                 FROM tartikel a
-                JOIN tartikelpict ap ON ap.kArtikel = a.kArtikel
+                JOIN tartikelpict ap ON 
+                    ap.kArtikel = a.kArtikel
+                    AND ap.nNr = 1
                 JOIN tbild b ON b.kBild = ap.kBild
                 JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
                 WHERE
