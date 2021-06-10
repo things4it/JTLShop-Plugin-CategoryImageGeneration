@@ -19,6 +19,9 @@ msgstr "Generate category images"
 
 # adminmenu
 
+msgid "admin.settings.post-saved.success"
+msgstr "The settings only take effect at the next start of the generation cronjob. All previously generated images will be deleted and regenerated with the current settings."
+
 msgid "admin.regenerate.description"
 msgstr "Here you can regenerate or overwrite the category image for individual categories."
 

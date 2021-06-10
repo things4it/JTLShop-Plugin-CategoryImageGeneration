@@ -19,6 +19,9 @@ msgstr "Kategoriebilder generieren"
 
 # adminmenu
 
+msgid "admin.settings.post-saved.success"
+msgstr "Die Einstellungen wirken sich erst beim nächsten Start generieungs-CronJobs aus. Dabei werden alle bisher generierten Bilder gelöscht und mit den aktuellen Einstellungen neu generiert"
+
 msgid "admin.regenerate.description"
 msgstr "Hier kannst du das Kategoriebild für einzelne Kategorien neu generieren bzw. überschreiben."
 

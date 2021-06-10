@@ -16,15 +16,6 @@
                 <Name>Bild neu generieren (einzeln)</Name>
             </Customlink>
             <Settingslink sort="2">
-                <Setting type="text" initialValue="" sort="0" conf="N">
-                    <Name>Allgemein</Name>
-                    <ValueName>Spacer</ValueName>
-                    <Description>
-                        Die Einstellungen greifen nur für Kategorien für die noch kein Bild generiert wurde.
-                        Damit alle Bilder für Kategorien bei denen kein Bild über die Wawi gepflegt wurde auf basis der
-                        Einstellungen neu generiert werden muss das Plugin neu installiert werden.
-                    </Description>
-                </Setting>
                 <Name>Einstellungen</Name>
                 <Setting type="radio" initialValue="3" sort="1" conf="Y">
                     <Name>Maximale Anzahl Artikelbilder</Name>

@@ -16,6 +16,7 @@ use JTL\Shop;
 use JTL\Smarty\JTLSmarty;
 use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
@@ -54,6 +55,15 @@ class Bootstrap extends Bootstrapper
             }
         });
 
+        $dispatcher->listen('shop.hook.' . \HOOK_PLUGIN_SAVE_OPTIONS, function (array $args) {
+            $hasError = $args['hasError'];
+            $savedPlugin = $args['plugin'];
+
+            if ($savedPlugin->getID() == $this->getPlugin()->getID() && $hasError === false) {
+                Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.settings.post-saved.success'), 'infoSettingsChanged');
+                SettingsDao::updateChangedFlag(true, $this->getDB());
+            }
+        });
 
     }
 
