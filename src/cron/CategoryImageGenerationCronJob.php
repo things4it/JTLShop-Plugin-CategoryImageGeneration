@@ -8,7 +8,9 @@ use JTL\Cron\QueueEntry;
 use JTL\Shop;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryCronJobQueueDao;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
+use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
  * Class CategoryImageGenerationCronJob
@@ -25,6 +27,15 @@ class CategoryImageGenerationCronJob extends Job
         parent::start($queueEntry);
 
         if ($queueEntry->taskLimit === 0) {
+            if (SettingsDao::fetchChangedFlag($this->db)) {
+                $this->logger->info('Category-Image-Generation-CronJob: settings-changed-flag detected - delete all previously generated images to regenerate it');
+
+                CategoryHelperDao::removeGeneratedImages($this->db);
+                CategoryImageGenerator::removeGeneratedImages();
+
+                SettingsDao::updateChangedFlag(false, $this->db);
+            }
+
             $queueEntry->taskLimit = $this->initCronJobQueue();
             $this->logger->info(\sprintf('Category-Image-Generation-CronJob: started - initialize queue with %s categories without image', $queueEntry->taskLimit));
         } else {
