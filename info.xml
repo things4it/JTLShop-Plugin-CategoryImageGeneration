@@ -15,6 +15,21 @@
             <Customlink sort="1">
                 <Name>Bild neu generieren (einzeln)</Name>
             </Customlink>
+            <Settingslink sort="2">
+                <Name>Einstellungen</Name>
+                <Setting type="radio" initialValue="3" sort="1" conf="Y">
+                    <Name>Maximale Anzahl Artikelbilder</Name>
+                    <Description>Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds
+                        verwendet werden
+                    </Description>
+                    <ValueName>t4it_category_image_generation-maxArticleImagesPerCategory</ValueName>
+                    <RadioOptions>
+                        <Option value="1" sort="1">1</Option>
+                        <Option value="2" sort="2">2</Option>
+                        <Option value="3" sort="3">3</Option>
+                    </RadioOptions>
+                </Setting>
+            </Settingslink>
         </Adminmenu>
     </Install>
 </jtlshopplugin>

@@ -12,12 +12,24 @@ msgstr "Generates category images based on their articles"
 msgid "Bild neu generieren (einzeln)"
 msgstr "Re-Create a category image"
 
+msgid "Einstellungen"
+msgstr "Settings"
+
+msgid "Maximale Anzahl Artikelbilder"
+msgstr "Max count of article images"
+
+msgid "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
+msgstr "Max count of article images which will be used for the generation of one category image"
+
 # cron
 
 msgid "things4it_category_image_generation_cronjob"
 msgstr "Generate category images"
 
 # adminmenu
+
+msgid "admin.settings.post-saved.success"
+msgstr "The settings only take effect at the next start of the generation cronjob. All previously generated images will be deleted and regenerated with the current settings."
 
 msgid "admin.regenerate.description"
 msgstr "Here you can regenerate or overwrite the category image for individual categories."
