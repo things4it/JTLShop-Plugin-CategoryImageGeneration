@@ -76,7 +76,7 @@ class CategoryHelperDao
 
         $imagesResult = $db->query('
                 SELECT
-                     b.cPfad
+                     DISTINCT b.cPfad
                 FROM tartikel a
                 JOIN tartikelpict ap ON 
                     ap.kArtikel = a.kArtikel
