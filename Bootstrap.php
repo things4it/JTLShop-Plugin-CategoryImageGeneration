@@ -73,7 +73,19 @@ class Bootstrap extends Bootstrapper
     public function installed()
     {
         parent::installed();
+
         $this->addCron();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function disabled()
+    {
+        parent::disabled();
+
+        CategoryHelperDao::removeGeneratedImages($this->getDB());
+        CategoryImageGenerator::removeGeneratedImages();
     }
 
     /**
@@ -82,6 +94,7 @@ class Bootstrap extends Bootstrapper
     public function uninstalled(bool $deleteData = true)
     {
         parent::uninstalled($deleteData);
+
         $this->removeCron();
 
         if ($deleteData) {
