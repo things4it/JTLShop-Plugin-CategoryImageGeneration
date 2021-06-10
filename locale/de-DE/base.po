@@ -12,6 +12,15 @@ msgstr "Generiert Kategorie-Bilder auf Basis deren Artikeln"
 msgid "Bild neu generieren (einzeln)"
 msgstr "Bild neu generieren (einzeln)"
 
+msgid "Einstellungen"
+msgstr "Einstellungen"
+
+msgid "Maximale Anzahl Artikelbilder"
+msgstr "Maximale Anzahl Artikelbilder"
+
+msgid "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
+msgstr "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
+
 # cron
 
 msgid "things4it_category_image_generation_cronjob"
