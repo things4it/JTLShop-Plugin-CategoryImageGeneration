@@ -46,7 +46,9 @@ class CategoryHelperDao
      */
     public static function findRandomArticleImages(int $categoryId, int $maxArticleImages, DbInterface $db): array
     {
-        $categoryPathsResult = $db->queryPrepared('
+        $imagesResult = self::fetchRandomArticleImagesForCategories([$categoryId], $maxArticleImages, $db);
+        if (\sizeof($imagesResult) < $maxArticleImages) {
+            $categoryPathsResult = $db->queryPrepared('
             SELECT
                 k1.kKategorie k1,
                 k2.kKategorie k2,
@@ -60,36 +62,22 @@ class CategoryHelperDao
             LEFT JOIN tkategorie k5 ON k5.kOberKategorie = k4.kKategorie			
             WHERE
                 k1.kKategorie = :categoryId',
-            ['categoryId' => $categoryId],
-            ReturnType::ARRAY_OF_OBJECTS);
+                ['categoryId' => $categoryId],
+                ReturnType::ARRAY_OF_OBJECTS);
 
-        $relevantCategoryIds = [];
-        foreach ($categoryPathsResult as $categoryPathResult) {
-            array_push($relevantCategoryIds, $categoryPathResult->k1);
-            array_push($relevantCategoryIds, $categoryPathResult->k2);
-            array_push($relevantCategoryIds, $categoryPathResult->k3);
-            array_push($relevantCategoryIds, $categoryPathResult->k4);
-            array_push($relevantCategoryIds, $categoryPathResult->k5);
+            $relevantCategoryIds = [];
+            foreach ($categoryPathsResult as $categoryPathResult) {
+                array_push($relevantCategoryIds, $categoryPathResult->k1);
+                array_push($relevantCategoryIds, $categoryPathResult->k2);
+                array_push($relevantCategoryIds, $categoryPathResult->k3);
+                array_push($relevantCategoryIds, $categoryPathResult->k4);
+                array_push($relevantCategoryIds, $categoryPathResult->k5);
+            }
+            $relevantCategoryIds = array_filter($relevantCategoryIds);
+            $relevantCategoryIds = array_unique($relevantCategoryIds);
+
+            $imagesResult = self::fetchRandomArticleImagesForCategories($relevantCategoryIds, $maxArticleImages, $db);
         }
-        $relevantCategoryIds = array_filter($relevantCategoryIds);
-        $relevantCategoryIds = array_unique($relevantCategoryIds);
-
-        $imagesResult = $db->query('
-                SELECT
-                     DISTINCT b.cPfad
-                FROM tartikel a
-                JOIN tartikelpict ap ON 
-                    ap.kArtikel = a.kArtikel
-                    AND ap.nNr = 1
-                JOIN tbild b ON b.kBild = ap.kBild
-                JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
-                WHERE
-                    ka.kKategorie IN (' . join(',', $relevantCategoryIds) . ')
-                ORDER BY RAND()
-                LIMIT ' . $maxArticleImages . '
-        ',
-            ReturnType::ARRAY_OF_OBJECTS);
-
 
         $images = array();
         foreach ($imagesResult as $imageResult) {
@@ -156,6 +144,32 @@ class CategoryHelperDao
         foreach ($categoryIds as $categoryId) {
             $db->delete('tkategoriepict', 'kKategorie', $categoryId);
         }
+    }
+
+    /**
+     * @param array $relevantCategoryIds
+     * @param int $maxArticleImages
+     * @param DbInterface $db
+     * @return array|int|object
+     */
+    private static function fetchRandomArticleImagesForCategories(array $relevantCategoryIds, int $maxArticleImages, DbInterface $db)
+    {
+        $imagesResult = $db->query('
+                SELECT
+                     DISTINCT b.cPfad
+                FROM tartikel a
+                JOIN tartikelpict ap ON 
+                    ap.kArtikel = a.kArtikel
+                    AND ap.nNr = 1
+                JOIN tbild b ON b.kBild = ap.kBild
+                JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
+                WHERE
+                    ka.kKategorie IN (' . join(',', $relevantCategoryIds) . ')
+                ORDER BY RAND()
+                LIMIT ' . $maxArticleImages . '
+        ',
+            ReturnType::ARRAY_OF_OBJECTS);
+        return $imagesResult;
     }
 
 
