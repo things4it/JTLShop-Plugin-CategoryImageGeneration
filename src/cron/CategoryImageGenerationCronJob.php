@@ -26,6 +26,8 @@ class CategoryImageGenerationCronJob extends Job
     {
         parent::start($queueEntry);
 
+        $queueTimeStart = microtime(true);
+
         if ($queueEntry->taskLimit === 0) {
             if (SettingsDao::fetchChangedFlag($this->db)) {
                 $this->logger->info('Category-Image-Generation-CronJob: settings-changed-flag detected - delete all previously generated images to regenerate it');
@@ -42,15 +44,16 @@ class CategoryImageGenerationCronJob extends Job
             $this->logger->info(\sprintf('Category-Image-Generation-CronJob: continue queue processing - remaining categories: %s', $queueEntry->taskLimit));
         }
 
-        $this->generateCategoryImagesForNextChunk();
+        $generatedImagesCount = $this->generateCategoryImagesForNextChunk($queueTimeStart);
+
         $queueEntry->taskLimit = CategoryCronJobQueueDao::count($this->db);
         if ($queueEntry->taskLimit == 0) {
-            $this->logger->info('Category-Image-Generation-CronJob: finished');
-
             Shop::Cache()->flushTags(\CACHING_GROUP_CATEGORY);
             $this->setFinished(true);
+
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: finished - last chunk processed %s categories', $generatedImagesCount));
         } else {
-            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: chunk processed - %s categories in queue', $queueEntry->taskLimit));
+            $this->logger->info(\sprintf('Category-Image-Generation-CronJob: chunk processed %s categories - %s categories left in queue', $generatedImagesCount, $queueEntry->taskLimit));
         }
 
         return $this;
@@ -69,10 +72,16 @@ class CategoryImageGenerationCronJob extends Job
         return sizeof($categoriesWithoutImage);
     }
 
-    private function generateCategoryImagesForNextChunk()
+    /**
+     * @param float $queueTimeStart
+     * @return int count of generated images/processed categories
+     */
+    private function generateCategoryImagesForNextChunk(float $queueTimeStart): int
     {
+        $generatedImagesCount = 0;
+
         $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
-        $categories = CategoryCronJobQueueDao::findByLimit($this->db, 120);
+        $categories = CategoryCronJobQueueDao::findAll($this->db);
         foreach ($categories as $category) {
             try {
                 $categoryImageGenerationServiceInterface->generateCategoryImage($category->getKKategorie());
@@ -83,7 +92,26 @@ class CategoryImageGenerationCronJob extends Job
             }
 
             CategoryCronJobQueueDao::delete($category->getKKategorie(), $this->db);
+
+            $generatedImagesCount++;
+
+            if ($this->calculateSecondsBeforePhpMaxExecutionTimeReached($queueTimeStart) < 20) {
+                $this->logger->debug('Category-Image-Generation-CronJob: Abort image generation before php-execution-time limit reached');
+                break;
+            }
         }
+
+        return $generatedImagesCount;
+    }
+
+    private function calculateSecondsBeforePhpMaxExecutionTimeReached($timeStart): float
+    {
+        $maxExecutionTime = ini_get('max_execution_time');
+
+        $currentTime = microtime(true);
+        $currentExecutionTime = $currentTime - $timeStart;
+
+        return $maxExecutionTime - $currentExecutionTime;
     }
 
 }

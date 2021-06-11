@@ -10,18 +10,11 @@ class CategoryCronJobQueueDao
 {
     /**
      * @param DbInterface $db
-     * @param int $limit
      * @return Category[]
      */
-    public static function findByLimit(DbInterface $db, int $limit = 120): array
+    public static function findAll(DbInterface $db): array
     {
-        $resultObjects = $db->queryPrepared('
-                SELECT
-                     kKategorie
-                FROM xplugin_t4it_category_image_generation_job_queue                
-                LIMIT :limit',
-            ['limit' => $limit],
-            ReturnType::ARRAY_OF_OBJECTS);
+        $resultObjects = $db->selectAll('xplugin_t4it_category_image_generation_job_queue', [], []);
 
         $categoriesWithoutImage = array();
         foreach ($resultObjects as $resultObject) {
