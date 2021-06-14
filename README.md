@@ -39,14 +39,14 @@ Article images could be type of
 * gif
 * png
 
+# Requirements
+
+* Minimal tested php-version is ``7.3.28``
+* PHP-GD have to be installed with support for jpeg, png and gif
+  * Example for PHP-GD: ``apt install php7.4-gd``
+  * ...
+
 # Installation
 
-## Plugin Upload
-
-Ensure the plugin-folder is named as ``t4it_category_image_generation``, zip and upload it via the Plugin-Manager :)
-
-## PHP-DB is required
-
-PHP-GD have to be installed with support for jpeg, png and gif.
-
-Example for PHP-GD: ``apt install php7.4-gd``
+When you install this plugin out of a provided "release-bundle" - maybe you clone or download this repo, ensure the
+plugin-folder is named as ``t4it_category_image_generation``
