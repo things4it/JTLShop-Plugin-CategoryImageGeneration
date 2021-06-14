@@ -19,6 +19,12 @@ use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -40,6 +46,18 @@ class Bootstrap extends Bootstrapper
         $container = Shop::Container();
         $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
             return new CategoryImageGenerationService($this->getDB());
+        });
+
+        $container->setFactory(OneProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(TwoProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(ThreeProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultThreeProductImagesPlacementStrategy();
         });
 
         $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {

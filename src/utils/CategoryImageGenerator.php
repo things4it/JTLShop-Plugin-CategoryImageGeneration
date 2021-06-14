@@ -4,7 +4,11 @@
 namespace Plugin\t4it_category_image_generation\src\utils;
 
 
+use JTL\Shop;
 use Plugin\t4it_category_image_generation\src\db\entity\Image;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\service\ProductImagesPlacementService;
 
 class CategoryImageGenerator
@@ -74,34 +78,14 @@ class CategoryImageGenerator
 
         $productImageFilesCount = sizeof($productImageFiles);
         if ($productImageFilesCount == 3) {
-            $imageNumber = 0;
-            foreach ($productImageFiles as $productImageFile) {
-                if ($imageNumber == 0) {
-                    \imagecopyresized($categoryImage, $productImageFile, 0, 0, 0, 0, 500, 500, imagesx($productImageFile), imagesy($productImageFile));
-                } elseif ($imageNumber == 1) {
-                    \imagecopyresized($categoryImage, $productImageFile, 500, 24, 0, 0, 500, 500, imagesx($productImageFile), imagesy($productImageFile));
-                } else {
-                    \imagecopyresized($categoryImage, $productImageFile, 250, 500 + 24, 0, 0, 500, 500, imagesx($productImageFile), imagesy($productImageFile));
-                }
-
-                $imageNumber++;
-            }
-
+            $threeProductImagePlacementStrategyInterface = Shop::Container()->get(ThreeProductImagePlacementStrategyInterface::class);
+            $threeProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0], $productImageFiles[1], $productImageFiles[2]);
         } elseif ($productImageFilesCount == 2) {
-            $imageNumber = 0;
-            foreach ($productImageFiles as $productImageFile) {
-                if ($imageNumber == 0) {
-                    \imagecopyresized($categoryImage, $productImageFile, 0, 0, 0, 0, 500, 500, imagesx($productImageFile), imagesy($productImageFile));
-                } else {
-                    \imagecopyresized($categoryImage, $productImageFile, 500, 500, 0, 0, 500, 500, imagesx($productImageFile), imagesy($productImageFile));
-                }
-
-                $imageNumber++;
-            }
+            $twoProductImagePlacementStrategyInterface = Shop::Container()->get(TwoProductImagePlacementStrategyInterface::class);
+            $twoProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0], $productImageFiles[1]);
         } elseif ($productImageFilesCount == 1) {
-            $productImageFile = $productImageFiles[0];
-
-            \imagecopyresized($categoryImage, $productImageFile, 0, 0, 0, 0, 1024, 1024, imagesx($productImageFile), imagesy($productImageFile));
+            $oneProductImagePlacementStrategyInterface = Shop::Container()->get(OneProductImagePlacementStrategyInterface::class);
+            $oneProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0]);
         }
 
         foreach ($productImageFiles as $productImageFile) {
