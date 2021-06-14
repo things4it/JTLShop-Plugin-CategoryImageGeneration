@@ -6,6 +6,7 @@ namespace Plugin\t4it_category_image_generation\src\utils;
 
 use JTL\Shop;
 use Plugin\t4it_category_image_generation\src\db\entity\Image;
+use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
@@ -24,13 +25,14 @@ class CategoryImageGenerator
     /**
      * @param int $categoryId
      * @param Image[] $productImages
+     * @param ImageRatio $imageRatio
      * @return string
      */
-    public static function generateCategoryImage(int $categoryId, array $productImages): string
+    public static function generateCategoryImage(int $categoryId, array $productImages, ImageRatio $imageRatio): string
     {
-        $categoryImage = ImageUtils::createTransparentImage(1024, 1024);
+        $categoryImage = ImageUtils::createTransparentImage($imageRatio->getWidth(), $imageRatio->getHeight());
 
-        self::placeProductImageToCategoryImage($categoryImage, $productImages);
+        self::placeProductImageToCategoryImage($categoryImage, $productImages, $imageRatio);
 
         $targetImageName = self::CATEGORY_IMAGE_NAME_PREFIX . $categoryId . '.png';
         $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
@@ -64,14 +66,15 @@ class CategoryImageGenerator
     /**
      * @param $categoryImage
      * @param Image[] $productImages
+     * @param ImageRatio $imageRatio
      */
-    private static function placeProductImageToCategoryImage($categoryImage, array $productImages)
+    private static function placeProductImageToCategoryImage($categoryImage, array $productImages, ImageRatio $imageRatio)
     {
         $productImageFiles = array();
         foreach ($productImages as $productImage) {
             $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
             if (\file_exists($sourceImagePath)) {
-                $image = ImageUtils::createResizedImage($sourceImagePath, 1024, 1024, 40);
+                $image = ImageUtils::createResizedImage($sourceImagePath, $imageRatio->getWidth(), $imageRatio->getHeight());
                 $productImageFiles[] = $image;
             }
         }
@@ -79,13 +82,13 @@ class CategoryImageGenerator
         $productImageFilesCount = sizeof($productImageFiles);
         if ($productImageFilesCount == 3) {
             $threeProductImagePlacementStrategyInterface = Shop::Container()->get(ThreeProductImagePlacementStrategyInterface::class);
-            $threeProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0], $productImageFiles[1], $productImageFiles[2]);
+            $threeProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0], $productImageFiles[1], $productImageFiles[2]);
         } elseif ($productImageFilesCount == 2) {
             $twoProductImagePlacementStrategyInterface = Shop::Container()->get(TwoProductImagePlacementStrategyInterface::class);
-            $twoProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0], $productImageFiles[1]);
+            $twoProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0], $productImageFiles[1]);
         } elseif ($productImageFilesCount == 1) {
             $oneProductImagePlacementStrategyInterface = Shop::Container()->get(OneProductImagePlacementStrategyInterface::class);
-            $oneProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $productImageFiles[0]);
+            $oneProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0]);
         }
 
         foreach ($productImageFiles as $productImageFile) {

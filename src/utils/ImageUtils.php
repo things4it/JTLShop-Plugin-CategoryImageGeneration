@@ -4,8 +4,6 @@
 namespace Plugin\t4it_category_image_generation\src\utils;
 
 
-use Plugin\t4it_category_image_generation\src\service\ProductImagesPlacementService;
-
 class ImageUtils
 {
 

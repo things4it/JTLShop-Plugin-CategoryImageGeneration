@@ -4,11 +4,13 @@
 namespace Plugin\t4it_category_image_generation\src\service\placementStrategy;
 
 
+use Plugin\t4it_category_image_generation\src\model\ImageRatio;
+
 class DefaultOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
 
-    public function placeProductImages($categoryImage, $productImage)
+    public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage)
     {
-        \imagecopyresized($categoryImage, $productImage, 0, 0, 0, 0, 1024, 1024, imagesx($productImage), imagesy($productImage));
+        \imagecopyresized($categoryImage, $productImage, 0, 0, 0, 0, $imageRatio->getWidth(), $imageRatio->getHeight(), imagesx($productImage), imagesy($productImage));
     }
 }
