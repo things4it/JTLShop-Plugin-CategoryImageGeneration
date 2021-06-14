@@ -42,46 +42,8 @@ class Bootstrap extends Bootstrapper
     {
         parent::boot($dispatcher);
 
-        $container = Shop::Container();
-        $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
-            return new CategoryImageGenerationService($this->getDB());
-        });
-
-        $container->setFactory(OneProductImagePlacementStrategyInterface::class, function ($container) {
-            return new DefaultOneProductImagePlacementStrategy();
-        });
-
-        $container->setFactory(TwoProductImagePlacementStrategyInterface::class, function ($container) {
-            return new DefaultTwoProductImagesPlacementStrategy();
-        });
-
-        $container->setFactory(ThreeProductImagePlacementStrategyInterface::class, function ($container) {
-            return new DefaultThreeProductImagesPlacementStrategy();
-        });
-
-        $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {
-            if ($args['type'] === Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION) {
-                $args['mapping'] = CategoryImageGenerationCronJob::class;
-            }
-        });
-
-        $dispatcher->listen(Event::GET_AVAILABLE_CRONJOBS, static function (array $args) {
-            $jobs = &$args['jobs'];
-            if (is_array($jobs)) {
-                array_push($jobs, Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
-            }
-        });
-
-        $dispatcher->listen('shop.hook.' . \HOOK_PLUGIN_SAVE_OPTIONS, function (array $args) {
-            $hasError = $args['hasError'];
-            $savedPlugin = $args['plugin'];
-
-            if ($savedPlugin->getID() == $this->getPlugin()->getID() && $hasError === false) {
-                Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.settings.post-saved.success'), 'infoSettingsChanged');
-                SettingsDao::updateChangedFlag(true, $this->getDB());
-            }
-        });
-
+        $this->setupContainer();
+        $this->addListeners($dispatcher);
     }
 
     /**
@@ -153,6 +115,55 @@ class Bootstrap extends Bootstrapper
 
         return $smarty->assign('adminURL', Shop::getURL() . '/' . \PFAD_ADMIN . 'plugin.php?kPlugin=' . $plugin->getID()
         )->fetch($this->getPlugin()->getPaths()->getAdminPath() . '/templates/re-generate.tpl');
+    }
+
+    private function setupContainer(): void
+    {
+        $container = Shop::Container();
+        $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
+            return new CategoryImageGenerationService($this->getDB());
+        });
+
+        $container->setFactory(OneProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(TwoProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(ThreeProductImagePlacementStrategyInterface::class, function ($container) {
+            return new DefaultThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    /**
+     * @param Dispatcher $dispatcher
+     */
+    private function addListeners(Dispatcher $dispatcher): void
+    {
+        $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {
+            if ($args['type'] === Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION) {
+                $args['mapping'] = CategoryImageGenerationCronJob::class;
+            }
+        });
+
+        $dispatcher->listen(Event::GET_AVAILABLE_CRONJOBS, static function (array $args) {
+            $jobs = &$args['jobs'];
+            if (is_array($jobs)) {
+                array_push($jobs, Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
+            }
+        });
+
+        $dispatcher->listen('shop.hook.' . \HOOK_PLUGIN_SAVE_OPTIONS, function (array $args) {
+            $hasError = $args['hasError'];
+            $savedPlugin = $args['plugin'];
+
+            if ($savedPlugin->getID() == $this->getPlugin()->getID() && $hasError === false) {
+                Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.settings.post-saved.success'), 'infoSettingsChanged');
+                SettingsDao::updateChangedFlag(true, $this->getDB());
+            }
+        });
     }
 
     private function addCron(): void
