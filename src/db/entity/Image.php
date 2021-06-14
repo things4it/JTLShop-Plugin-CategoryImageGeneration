@@ -5,7 +5,10 @@ namespace Plugin\t4it_category_image_generation\src\db\entity;
 class Image
 {
 
-    private string $cPath;
+    /**
+     * @var string
+     */
+    private $cPath;
 
     /**
      * @return string

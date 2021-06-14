@@ -8,9 +8,21 @@ class ImageRatio
     public const RATIO_1_TO_1 = '1:1';
     public const RATIO_4_TO_3 = '4:3';
 
-    private string $code;
-    private int $width;
-    private int $height;
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var int
+     */
+    private $width;
+
+
+    /**
+     * @var int
+     */
+    private $height;
 
     /**
      * ImageRatio constructor.
