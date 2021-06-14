@@ -3,7 +3,7 @@
     <Name>Kategorie Bild generierung</Name>
     <Description>Generiert Kategorie-Bilder auf Basis deren Artikeln</Description>
     <Author>Johannes Wendig</Author>
-    <URL>http://www.things4it.de</URL>
+    <URL>https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration</URL>
     <PluginID>t4it_category_image_generation</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
