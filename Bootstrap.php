@@ -14,6 +14,7 @@ use JTL\Helpers\Request;
 use JTL\Plugin\Bootstrapper;
 use JTL\Shop;
 use JTL\Smarty\JTLSmarty;
+use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
@@ -33,8 +34,6 @@ use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
  */
 class Bootstrap extends Bootstrapper
 {
-
-    private const CATEGORY_IMAGE_GENERATION_CRON_JOB = 'things4it_category_image_generation_cronjob';
 
     /**
      * @inheritdoc
@@ -61,7 +60,7 @@ class Bootstrap extends Bootstrapper
         });
 
         $dispatcher->listen(Event::MAP_CRONJOB_TYPE, static function (array $args) {
-            if ($args['type'] === self::CATEGORY_IMAGE_GENERATION_CRON_JOB) {
+            if ($args['type'] === Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION) {
                 $args['mapping'] = CategoryImageGenerationCronJob::class;
             }
         });
@@ -69,7 +68,7 @@ class Bootstrap extends Bootstrapper
         $dispatcher->listen(Event::GET_AVAILABLE_CRONJOBS, static function (array $args) {
             $jobs = &$args['jobs'];
             if (is_array($jobs)) {
-                array_push($jobs, self::CATEGORY_IMAGE_GENERATION_CRON_JOB);
+                array_push($jobs, Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
             }
         });
 
@@ -160,7 +159,7 @@ class Bootstrap extends Bootstrapper
     {
         $job = new \stdClass();
         $job->name = 'Kategorie-Bild generierung';
-        $job->jobType = self::CATEGORY_IMAGE_GENERATION_CRON_JOB;
+        $job->jobType = Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION;
         $job->frequency = 24;
         $job->startDate = 'NOW()';
         $job->startTime = '00:00:00';
@@ -170,7 +169,7 @@ class Bootstrap extends Bootstrapper
 
     private function removeCron(): void
     {
-        $this->getDB()->delete('tcron', 'jobType', self::CATEGORY_IMAGE_GENERATION_CRON_JOB);
+        $this->getDB()->delete('tcron', 'jobType', Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
     }
 
 }
