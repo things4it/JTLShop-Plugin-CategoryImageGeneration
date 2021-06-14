@@ -21,6 +21,9 @@ msgstr "Maximale Anzahl Artikelbilder"
 msgid "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
 msgstr "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
 
+msgid "Verhältnis des Kategoriebilds"
+msgstr "Verhältnis des Kategoriebilds"
+
 # cron
 
 msgid "things4it_category_image_generation_cronjob"

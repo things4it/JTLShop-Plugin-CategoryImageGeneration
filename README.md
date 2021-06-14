@@ -5,6 +5,7 @@ This plugin generates images for categories which doesn't have a image.
 The generated image is based on random products of the category and their subcategories (down to 5th level).
 
 * The max amount of images which should be used is configurable (1 to 3, 3 is default)
+* The ratio of the generated image is configurable (1:1 or 4:3)
 * Images of articles which are a direct child of the category will be preferred - only when there are not enough
   articles with images (config max-count) - the articles of subcategories down to level 5 will be checked
 

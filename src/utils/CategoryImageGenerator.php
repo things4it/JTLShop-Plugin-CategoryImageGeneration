@@ -4,7 +4,13 @@
 namespace Plugin\t4it_category_image_generation\src\utils;
 
 
+use JTL\Shop;
 use Plugin\t4it_category_image_generation\src\db\entity\Image;
+use Plugin\t4it_category_image_generation\src\model\ImageRatio;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\ProductImagesPlacementService;
 
 class CategoryImageGenerator
 {
@@ -19,60 +25,14 @@ class CategoryImageGenerator
     /**
      * @param int $categoryId
      * @param Image[] $productImages
+     * @param ImageRatio $imageRatio
      * @return string
      */
-    public static function generateCategoryImage(int $categoryId, array $productImages): string
+    public static function generateCategoryImage(int $categoryId, array $productImages, ImageRatio $imageRatio): string
     {
-        $categoryImage = self::createTransparentImage(1024, 1024);
+        $categoryImage = ImageUtils::createTransparentImage($imageRatio->getWidth(), $imageRatio->getHeight());
 
-        $productImagesCount = sizeof($productImages);
-        if ($productImagesCount == 3) {
-            $imageNumber = 0;
-            foreach ($productImages as $productImage) {
-                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
-                if (\file_exists($sourceImagePath)) {
-                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500, 20);
-                    if ($imageNumber == 0) {
-                        \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-                    } elseif ($imageNumber == 1) {
-                        \imagecopy($categoryImage, $image, 500, 24, 0, 0, imagesx($image), imagesy($image));
-                    } else {
-                        \imagecopy($categoryImage, $image, 250, 500 + 24, 0, 0, imagesx($image), imagesy($image));
-                    }
-
-                    \imagedestroy($image);
-                }
-
-                $imageNumber++;
-            }
-        } elseif ($productImagesCount == 2) {
-            $imageNumber = 0;
-            foreach ($productImages as $productImage) {
-                $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
-                if (\file_exists($sourceImagePath)) {
-                    $image = self::getResizedArticleImage($sourceImagePath, 500, 500);
-                    if ($imageNumber == 0) {
-                        \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-                    } else {
-                        \imagecopy($categoryImage, $image, 500, 500, 0, 0, imagesx($image), imagesy($image));
-                    }
-
-                    \imagedestroy($image);
-                }
-
-                $imageNumber++;
-            }
-        } elseif ($productImagesCount == 1) {
-            $productImage = $productImages[0];
-
-            $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
-            if (\file_exists($sourceImagePath)) {
-                $image = self::getResizedArticleImage($sourceImagePath, 1024, 1024);
-                \imagecopy($categoryImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-                \imagedestroy($image);
-            }
-
-        }
+        self::placeProductImageToCategoryImage($categoryImage, $productImages, $imageRatio);
 
         $targetImageName = self::CATEGORY_IMAGE_NAME_PREFIX . $categoryId . '.png';
         $targetImagePath = \PFAD_ROOT . \STORAGE_CATEGORIES . $targetImageName;
@@ -104,62 +64,36 @@ class CategoryImageGenerator
     }
 
     /**
-     * @param int $width
-     * @param int $height
-     * @return false|\GdImage|resource
+     * @param $categoryImage
+     * @param Image[] $productImages
+     * @param ImageRatio $imageRatio
      */
-    private static function createTransparentImage(int $width, int $height)
+    private static function placeProductImageToCategoryImage($categoryImage, array $productImages, ImageRatio $imageRatio)
     {
-        $image = \imagecreatetruecolor($width, $height);
-        $colorTransparent = \imagecolorallocatealpha($image, 0, 0, 0, 127);
-        \imagefill($image, 0, 0, $colorTransparent);
-        \imagealphablending($image, true);
-        \imagesavealpha($image, true);
-
-        return $image;
-    }
-
-
-    /**
-     * @param string $originalImagePath
-     * @param int $targetWidth
-     * @param int $targetHeight
-     * @param int $padding
-     * @return false|\GdImage|resource
-     */
-    private static function getResizedArticleImage(string $originalImagePath, int $targetWidth = 640, int $targetHeight = 640, int $padding = 15)
-    {
-        list($originalImageWidth, $originalImageHeight, $originalImageType) = \getimagesize($originalImagePath);
-        switch ($originalImageType) {
-            case \IMAGETYPE_GIF:
-                $imageOriginal = \imagecreatefromgif($originalImagePath);
-                break;
-            case \IMAGETYPE_PNG:
-                $imageOriginal = \imagecreatefrompng($originalImagePath);
-                break;
-            case \IMAGETYPE_JPEG:
-            default:
-                $imageOriginal = \imagecreatefromjpeg($originalImagePath);
-                break;
+        $productImageFiles = array();
+        foreach ($productImages as $productImage) {
+            $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
+            if (\file_exists($sourceImagePath)) {
+                $image = ImageUtils::createResizedImage($sourceImagePath, $imageRatio->getWidth(), $imageRatio->getHeight());
+                $productImageFiles[] = $image;
+            }
         }
 
-        if ($originalImageWidth > $originalImageHeight) {
-            $scale = $targetWidth / $originalImageWidth;
-        } else {
-            $scale = $targetHeight / $originalImageHeight;
+        $productImageFilesCount = sizeof($productImageFiles);
+        if ($productImageFilesCount == 3) {
+            $threeProductImagePlacementStrategyInterface = Shop::Container()->get(ThreeProductImagePlacementStrategyInterface::class);
+            $threeProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0], $productImageFiles[1], $productImageFiles[2]);
+        } elseif ($productImageFilesCount == 2) {
+            $twoProductImagePlacementStrategyInterface = Shop::Container()->get(TwoProductImagePlacementStrategyInterface::class);
+            $twoProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0], $productImageFiles[1]);
+        } elseif ($productImageFilesCount == 1) {
+            $oneProductImagePlacementStrategyInterface = Shop::Container()->get(OneProductImagePlacementStrategyInterface::class);
+            $oneProductImagePlacementStrategyInterface->placeProductImages($categoryImage, $imageRatio, $productImageFiles[0]);
         }
 
-        $newWidth = $originalImageWidth * $scale - $padding * 2;
-        $newHeight = $originalImageHeight * $scale - $padding * 2;
-
-        $offsetX = ($targetWidth - $newWidth) / 2;
-        $offsetY = ($targetHeight - $newHeight) / 2;
-
-        $imageResized = self::createTransparentImage($targetWidth, $targetHeight);
-        \imagecopyresampled($imageResized, $imageOriginal, $offsetX, $offsetY, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
-        \imagedestroy($imageOriginal);
-
-        return $imageResized;
+        foreach ($productImageFiles as $productImageFile) {
+            \imagedestroy($productImageFile);
+        }
     }
 
 }

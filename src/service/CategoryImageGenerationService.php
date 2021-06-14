@@ -7,6 +7,8 @@ use JTL\Media\Image\Category;
 use JTL\Plugin\Helper;
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
+use Plugin\t4it_category_image_generation\src\model\ImageRatio;
+use Plugin\t4it_category_image_generation\src\model\ImageRatioFactory;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 
@@ -24,6 +26,7 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
 
     private DbInterface $db;
     private int $maxArticleImages;
+    private ImageRatio $imageRatio;
 
     /**
      * CategoryImageGenerationService constructor.
@@ -36,8 +39,12 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
         $plugin = Helper::getPluginById(Constants::PLUGIN_ID);
         if ($plugin === null) {
             $this->maxArticleImages = 3;
+            $this->imageRatio = ImageRatioFactory::createFromRatioString(ImageRatio::RATIO_1_TO_1);
         } else {
             $this->maxArticleImages = (int)$plugin->getConfig()->getValue(Constants::SETTINGS_MAX_ARTICLE_IMAGES_PER_CATEGORY);
+
+            $categoryImageRatio = (string)$plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_RATIO);
+            $this->imageRatio = ImageRatioFactory::createFromRatioString($categoryImageRatio);
         }
     }
 
@@ -47,7 +54,7 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
         $randomArticleImages = CategoryHelperDao::findRandomArticleImages($categoryId, $this->maxArticleImages, $this->db);
         $randomArticleImagesCount = sizeof($randomArticleImages);
         if ($randomArticleImagesCount > 0) {
-            $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages);
+            $categoryImagePath = CategoryImageGenerator::generateCategoryImage($categoryId, $randomArticleImages, $this->imageRatio);
             CategoryHelperDao::saveCategoryImage($categoryId, $categoryImagePath, $this->db);
 
             Category::clearCache($categoryId);
