@@ -17,6 +17,8 @@ The plugin uses the jtl-shop default tables for the images
 * no performance impact
 * configured images via jtl-wawi will win
 
+See also: https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration/wiki
+
 ## Plugin Settings
 
 Changes at settings will trigger the regeneration of all generated images!
@@ -45,6 +47,6 @@ Ensure the plugin-folder is named as ``t4it_category_image_generation``, zip and
 
 ## PHP-DB is required
 
-PHP-GD have to be installed ...
+PHP-GD have to be installed with support for jpeg, png and gif.
 
-For example: ``apt install php7.4-gd``
+Example for PHP-GD: ``apt install php7.4-gd``
