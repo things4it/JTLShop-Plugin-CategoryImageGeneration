@@ -24,9 +24,21 @@ interface CategoryImageGenerationServiceInterface
 class CategoryImageGenerationService implements CategoryImageGenerationServiceInterface
 {
 
-    private DbInterface $db;
-    private int $maxArticleImages;
-    private ImageRatio $imageRatio;
+    /**
+     * @var DbInterface
+     */
+    private $db;
+
+    /**
+     * @var int
+     */
+    private $maxArticleImages;
+
+
+    /**
+     * @var ImageRatio
+     */
+    private $imageRatio;
 
     /**
      * CategoryImageGenerationService constructor.
