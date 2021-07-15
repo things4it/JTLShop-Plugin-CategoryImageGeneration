@@ -9,11 +9,10 @@ namespace Plugin\t4it_category_image_generation;
 use JTL\Alert\Alert;
 use JTL\Events\Dispatcher;
 use JTL\Events\Event;
-use JTL\Helpers\Form;
-use JTL\Helpers\Request;
 use JTL\Plugin\Bootstrapper;
 use JTL\Shop;
 use JTL\Smarty\JTLSmarty;
+use Plugin\t4it_category_image_generation\adminmenu\RegenerateCategoryImageTab;
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\cron\CategoryImageGenerationCronJob;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
@@ -87,34 +86,13 @@ class Bootstrap extends Bootstrapper
      */
     public function renderAdminMenuTab(string $tabName, int $menuID, JTLSmarty $smarty): string
     {
-        $smarty->assign('menuID', $menuID)->assign('posted', null);
         $plugin = $this->getPlugin();
 
-        // TODO: extract into "controller/handler" !?
         if ($tabName === 'Bild neu generieren (einzeln)') {
-            // TODO: handle invalid token
-            if (!empty($_POST) && Request::postVar('code') == 're-generate' && Form::validateToken()) {
-                $categoryId = Request::postInt('categoryId');
-
-                // TODO: validate given categoryId ...
-
-                try {
-                    $categoryImageGenerationServiceInterface = Shop::Container()->get(CategoryImageGenerationServiceInterface::class);
-                    $categoryImageGenerationServiceInterface->generateCategoryImage($categoryId);
-
-                    Shop::Cache()->flushTags(\CACHING_GROUP_CATEGORY);
-
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_SUCCESS, __('admin.regenerate.common.success', $categoryId), 'succReGenerate');
-                } catch (\Exception $e) {
-                    Shop::Container()->getAlertService()->addAlert(Alert::TYPE_ERROR, __('admin.regenerate.common.error', $categoryId, $e->getMessage()), 'errReGenerate');
-                }
-            }
+            return RegenerateCategoryImageTab::handleRequest($plugin, $this->getDB(), $smarty);
         }
 
-        $smarty->assign('API_URL', $plugin->getPaths()->getAdminURL() . "/api.php");
-
-        return $smarty->assign('adminURL', Shop::getURL() . '/' . \PFAD_ADMIN . 'plugin.php?kPlugin=' . $plugin->getID()
-        )->fetch($this->getPlugin()->getPaths()->getAdminPath() . '/templates/re-generate.tpl');
+        return parent::renderAdminMenuTab($tabName, $menuID, $smarty);
     }
 
     private function setupContainer(): void
