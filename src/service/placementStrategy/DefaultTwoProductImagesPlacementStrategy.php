@@ -8,6 +8,10 @@ use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 
 class DefaultTwoProductImagesPlacementStrategy implements TwoProductImagePlacementStrategyInterface
 {
+    public static function getName(): string
+    {
+        return __("admin.settings.image-strategy.default");
+    }
 
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2)
     {

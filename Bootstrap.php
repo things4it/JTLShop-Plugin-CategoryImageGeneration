@@ -22,9 +22,9 @@ use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationSer
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultOneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultTwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -102,16 +102,28 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB());
         });
 
-        $container->setFactory(OneProductImagePlacementStrategyInterface::class, function ($container) {
+        $container->setFactory(DefaultOneProductImagePlacementStrategy::class, function ($container) {
             return new DefaultOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(TwoProductImagePlacementStrategyInterface::class, function ($container) {
+        $container->setFactory(DefaultTwoProductImagesPlacementStrategy::class, function ($container) {
             return new DefaultTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(ThreeProductImagePlacementStrategyInterface::class, function ($container) {
+        $container->setFactory(DefaultThreeProductImagesPlacementStrategy::class, function ($container) {
             return new DefaultThreeProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(FlipOneProductImagePlacementStrategy::class, function ($container) {
+            return new FlipOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(FlipTwoProductImagesPlacementStrategy::class, function ($container) {
+            return new FlipTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(FlipThreeProductImagesPlacementStrategy::class, function ($container) {
+            return new FlipThreeProductImagesPlacementStrategy();
         });
     }
 

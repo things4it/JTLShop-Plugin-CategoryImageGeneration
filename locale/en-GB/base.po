@@ -24,15 +24,21 @@ msgstr "Max count of article images which will be used for the generation of one
 msgid "Verhältnis des Kategoriebilds"
 msgstr "Ratio of the category image"
 
+msgid "Modus bei einem Bild"
+msgstr "Mode for one image"
+
+msgid "Modus bei zwei Bildern"
+msgstr "Mode for two images"
+
+msgid "Modus bei drei Bildern"
+msgstr "Mode for three images"
+
 # cron
 
 msgid "things4it_category_image_generation_cronjob"
 msgstr "Generate category images"
 
-# adminmenu
-
-msgid "admin.settings.post-saved.success"
-msgstr "The settings only take effect at the next start of the generation cronjob. All previously generated images will be deleted and regenerated with the current settings."
+# adminmenu - regenerate
 
 msgid "admin.regenerate.description"
 msgstr "Here you can regenerate or overwrite the category image for individual categories."
@@ -69,3 +75,16 @@ msgstr "Could not generate category image for category %s: %s"
 
 msgid "admin.regenerate.common.csrf-error.message"
 msgstr "Invalid CSRF-Token - Please refresh the page"
+
+# adminmenu - settings
+
+msgid "admin.settings.post-saved.success"
+msgstr "The settings only take effect at the next start of the generation cronjob. All previously generated images will be deleted and regenerated with the current settings."
+
+## image-strategies
+
+msgid "admin.settings.image-strategy.default"
+msgstr "Default"
+
+msgid "admin.settings.image-strategy.flip"
+msgstr "Fliped (for demonstration of the extensibility)"
