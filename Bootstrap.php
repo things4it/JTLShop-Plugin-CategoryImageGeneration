@@ -19,12 +19,12 @@ use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultTwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\FlipTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -102,28 +102,28 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB());
         });
 
-        $container->setFactory(DefaultOneProductImagePlacementStrategy::class, function ($container) {
-            return new DefaultOneProductImagePlacementStrategy();
+        $container->setFactory(OffsetOneProductImagePlacementStrategy::class, function ($container) {
+            return new OffsetOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(DefaultTwoProductImagesPlacementStrategy::class, function ($container) {
-            return new DefaultTwoProductImagesPlacementStrategy();
+        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::class, function ($container) {
+            return new OffsetTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(DefaultThreeProductImagesPlacementStrategy::class, function ($container) {
-            return new DefaultThreeProductImagesPlacementStrategy();
+        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::class, function ($container) {
+            return new OffsetThreeProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(FlipOneProductImagePlacementStrategy::class, function ($container) {
-            return new FlipOneProductImagePlacementStrategy();
+        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::class, function ($container) {
+            return new FlippedOffsetOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(FlipTwoProductImagesPlacementStrategy::class, function ($container) {
-            return new FlipTwoProductImagesPlacementStrategy();
+        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::class, function ($container) {
+            return new FlippedOffsetTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(FlipThreeProductImagesPlacementStrategy::class, function ($container) {
-            return new FlipThreeProductImagesPlacementStrategy();
+        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::class, function ($container) {
+            return new FlippedOffsetThreeProductImagesPlacementStrategy();
         });
     }
 

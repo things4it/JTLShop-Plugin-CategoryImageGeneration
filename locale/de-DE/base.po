@@ -83,8 +83,8 @@ msgstr "Die Einstellungen wirken sich erst beim nächsten Start generieungs-Cron
 
 ## image-strategies
 
-msgid "admin.settings.image-strategy.default"
-msgstr "Standard"
+msgid "admin.settings.image-strategy.offset"
+msgstr "Versetzt"
 
-msgid "admin.settings.image-strategy.flip"
-msgstr "Kopfüber/Gespiegelt (für Demonstrationszwecke der Erweiterbarkeit)"
+msgid "admin.settings.image-strategy.flipped-offset"
+msgstr "Verdreht versetzt (für Demonstrationszwecke der Erweiterbarkeit)"
