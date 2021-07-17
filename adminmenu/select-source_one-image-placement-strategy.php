@@ -8,13 +8,13 @@ use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\O
 
 $option = new stdClass();
 
-$option->cWert = OffsetOneProductImagePlacementStrategy::class;
+$option->cWert = OffsetOneProductImagePlacementStrategy::getCode();
 $option->cName = OffsetOneProductImagePlacementStrategy::getName();
 $option->nSort = 1;
 $options[] = $option;
 
 $option = new stdClass();
-$option->cWert = FlippedOffsetOneProductImagePlacementStrategy::class;
+$option->cWert = FlippedOffsetOneProductImagePlacementStrategy::getCode();
 $option->cName = FlippedOffsetOneProductImagePlacementStrategy::getName();
 $option->nSort = 2;
 $options[] = $option;

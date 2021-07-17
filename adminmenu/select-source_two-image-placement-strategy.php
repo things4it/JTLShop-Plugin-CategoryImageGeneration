@@ -7,13 +7,13 @@ use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\O
 
 $option = new stdClass();
 
-$option->cWert = OffsetThreeProductImagesPlacementStrategy::class;
+$option->cWert = OffsetThreeProductImagesPlacementStrategy::getCode();
 $option->cName = OffsetThreeProductImagesPlacementStrategy::getName();
 $option->nSort = 1;
 $options[] = $option;
 
 $option = new stdClass();
-$option->cWert = FlippedOffsetThreeProductImagesPlacementStrategy::class;
+$option->cWert = FlippedOffsetThreeProductImagesPlacementStrategy::getCode();
 $option->cName = FlippedOffsetThreeProductImagesPlacementStrategy::getName();
 $option->nSort = 2;
 $options[] = $option;

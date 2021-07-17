@@ -102,27 +102,27 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB());
         });
 
-        $container->setFactory(OffsetOneProductImagePlacementStrategy::class, function ($container) {
+        $container->setFactory(OffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
             return new OffsetOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::class, function ($container) {
+        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
             return new OffsetTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::class, function ($container) {
+        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
             return new OffsetThreeProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::class, function ($container) {
+        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
             return new FlippedOffsetOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::class, function ($container) {
+        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
             return new FlippedOffsetTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::class, function ($container) {
+        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
             return new FlippedOffsetThreeProductImagesPlacementStrategy();
         });
     }
