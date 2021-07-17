@@ -102,29 +102,8 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB());
         });
 
-        $container->setFactory(OffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new OffsetOneProductImagePlacementStrategy();
-        });
-
-        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetTwoProductImagesPlacementStrategy();
-        });
-
-        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetThreeProductImagesPlacementStrategy();
-        });
-
-        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetOneProductImagePlacementStrategy();
-        });
-
-        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetTwoProductImagesPlacementStrategy();
-        });
-
-        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetThreeProductImagesPlacementStrategy();
-        });
+        $this->provideImagePlacementStrategiesOffset($container);
+        $this->provideImagePlacementStrategiesFlippedOffset($container);
     }
 
     /**
@@ -171,6 +150,36 @@ class Bootstrap extends Bootstrapper
     private function removeCron(): void
     {
         $this->getDB()->delete('tcron', 'jobType', Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
+    }
+
+    private function provideImagePlacementStrategiesOffset(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(OffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new OffsetOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesFlippedOffset(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new FlippedOffsetOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new FlippedOffsetTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new FlippedOffsetThreeProductImagesPlacementStrategy();
+        });
     }
 
 }

@@ -17,7 +17,7 @@ The plugin uses the jtl-shop default tables for the images
 * no performance impact
 * configured images via jtl-wawi will win
 
-See also: https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration/wiki
+**See also**: https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration/wiki
 
 ## Plugin Settings
 
@@ -45,6 +45,9 @@ Article images could be type of
 * PHP-GD have to be installed with support for jpeg, png and gif
   * Example for PHP-GD: ``apt install php7.4-gd``
   * ...
+* JTL Cron-Jobs should be triggered by a native system cronjob
+  * See the recommendation from JTL
+    in https://guide.jtl-software.de/jtl-shop/systemverwaltung/aufgabenplaner-fuer-exporte-einrichten/#wie-und-wann-werden-aufgaben-im-aufgabenplaner-abgearbeitet
 
 # Installation
 
