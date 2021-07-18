@@ -9,15 +9,18 @@ The generated image is based on random products of the category and their subcat
 * Images of articles which are a direct child of the category will be preferred - only when there are not enough
   articles with images (config max-count) - the articles of subcategories down to level 5 will be checked
 
-By default missing images will be checked every day at 00:00 via cron-job.
+By default missing images will be checked every day at 00:00 via cron-job. The cron-job is named as "Kategoriebilder
+generieren (Plugin)"/"Generate category images (Plugin)"
 
-The plugin uses the jtl-shop default tables for the images
+The plugin uses the jtl-shop default tables for the images, so
 
 * no custom mechanism was provided for image handling
-* no performance impact
+* no performance impact for the customer
 * configured images via jtl-wawi will win
 
-**See also**: https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration/wiki
+Additional Informations, like **troubleshooting**, you can find
+on https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration/wiki. The project is open-source - so you are
+welcome to check the code. If you find a bug or you have a improovement - just create a issue or create a pull-request.
 
 ## Plugin Settings
 
