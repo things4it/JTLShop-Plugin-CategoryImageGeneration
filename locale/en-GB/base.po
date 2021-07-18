@@ -3,8 +3,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 # info.xml
-msgid "Kategorie Bild generierung"
-msgstr "Category image generation"
+msgid "Kategorie Bild Generator"
+msgstr "Category image generator"
 
 msgid "Generiert Kategorie-Bilder auf Basis deren Artikeln"
 msgstr "Generates category images based on their articles"

@@ -1,4 +1,4 @@
-# Category-Image-Generation
+# Category-Image-Generator
 
 This plugin generates images for categories which doesn't have a image.
 

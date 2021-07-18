@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jtlshopplugin>
-    <Name>Kategorie Bild generierung</Name>
+    <Name>Kategorie Bild Generator</Name>
     <Description>Generiert Kategorie-Bilder auf Basis deren Artikeln</Description>
     <Author>Johannes Wendig</Author>
     <URL>https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration</URL>
