@@ -5,6 +5,7 @@
     <Author>Johannes Wendig</Author>
     <URL>https://github.com/things4it/JTLShop-Plugin-CategoryImageGeneration</URL>
     <PluginID>t4it_category_image_generation</PluginID>
+    <ExsID>bae1ffb5-6ff6-414f-953f-b6ee234bf4c3</ExsID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
     <Icon></Icon>
