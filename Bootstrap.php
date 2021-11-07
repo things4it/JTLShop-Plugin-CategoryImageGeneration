@@ -99,7 +99,7 @@ class Bootstrap extends Bootstrapper
     {
         $container = Shop::Container();
         $container->setFactory(CategoryImageGenerationServiceInterface::class, function ($container) {
-            return new CategoryImageGenerationService($this->getDB());
+            return new CategoryImageGenerationService($this->getDB(), $this->getPlugin());
         });
 
         $this->provideImagePlacementStrategiesOffset($container);

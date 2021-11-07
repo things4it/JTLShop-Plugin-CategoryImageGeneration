@@ -4,14 +4,11 @@ namespace Plugin\t4it_category_image_generation\src\service;
 
 use JTL\DB\DbInterface;
 use JTL\Media\Image\Category;
-use JTL\Plugin\Helper;
+use JTL\Plugin\PluginInterface;
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\model\ImageRatioFactory;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\DefaultTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 
@@ -26,6 +23,11 @@ interface CategoryImageGenerationServiceInterface
 
 class CategoryImageGenerationService implements CategoryImageGenerationServiceInterface
 {
+
+    /**
+     * @var PluginInterface
+     */
+    private PluginInterface $plugin;
 
     /**
      * @var DbInterface
@@ -61,39 +63,18 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
     /**
      * CategoryImageGenerationService constructor.
      * @param DbInterface $db
+     * @param PluginInterface $plugin
      */
-    public function __construct(DbInterface $db)
+    public function __construct(DbInterface $db, PluginInterface $plugin)
     {
         $this->db = $db;
+        $this->plugin = $plugin;
 
-        $plugin = Helper::getPluginById(Constants::PLUGIN_ID);
-        if ($plugin === null) {
-            $this->maxArticleImages = 3;
-            $this->imageRatio = ImageRatioFactory::createFromRatioString(ImageRatio::RATIO_1_TO_1);
-            $this->imageStrategyOneImage = DefaultOneProductImagePlacementStrategy::class;
-            $this->imageStrategyTwoImages = DefaultTwoProductImagesPlacementStrategy::class;
-            $this->imageStrategyThreeImages = DefaultThreeProductImagesPlacementStrategy::class;
-        } else {
-            $this->maxArticleImages = (int)$plugin->getConfig()->getValue(Constants::SETTINGS_MAX_ARTICLE_IMAGES_PER_CATEGORY);
-
-            $categoryImageRatio = (string)$plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_RATIO);
-            $this->imageRatio = ImageRatioFactory::createFromRatioString($categoryImageRatio);
-
-            $configuredImageStrategyOneImage = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_ONE_IMAGE);
-            if (strlen($configuredImageStrategyOneImage) > 0) {
-                $this->imageStrategyOneImage = $configuredImageStrategyOneImage;
-            }
-
-            $configuredImageStrategyTwoImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TWO_IMAGES);
-            if (strlen($configuredImageStrategyTwoImages) > 0) {
-                $this->imageStrategyTwoImages = $configuredImageStrategyTwoImages;
-            }
-
-            $configuredImageStrategyTreeImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TREE_IMAGES);
-            if (strlen($configuredImageStrategyTreeImages) > 0) {
-                $this->imageStrategyThreeImages = $configuredImageStrategyTreeImages;
-            }
-        }
+        $this->maxArticleImages = (int)$plugin->getConfig()->getValue(Constants::SETTINGS_MAX_ARTICLE_IMAGES_PER_CATEGORY);
+        $this->imageRatio = ImageRatioFactory::createFromRatioString((string)$plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_RATIO));
+        $this->imageStrategyOneImage = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_ONE_IMAGE);
+        $this->imageStrategyTwoImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TWO_IMAGES);
+        $this->imageStrategyThreeImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TREE_IMAGES);
     }
 
 
