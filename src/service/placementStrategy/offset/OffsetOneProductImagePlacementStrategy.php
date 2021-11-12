@@ -7,6 +7,7 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\of
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class OffsetOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
@@ -22,6 +23,8 @@ class OffsetOneProductImagePlacementStrategy implements OneProductImagePlacement
 
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage)
     {
+        $productImage = ImageUtils::centerImageInSize($productImage);
+
         \imagecopyresized($categoryImage, $productImage, 0, 0, 0, 0, $imageRatio->getWidth(), $imageRatio->getHeight(), imagesx($productImage), imagesy($productImage));
     }
 }

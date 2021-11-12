@@ -74,7 +74,7 @@ class CategoryImageGenerator
         foreach ($productImages as $productImage) {
             $sourceImagePath = \PFAD_ROOT . \PFAD_MEDIA_IMAGE_STORAGE . $productImage->getCPath();
             if (\file_exists($sourceImagePath)) {
-                $image = ImageUtils::createResizedImage($sourceImagePath, $imageRatio->getWidth(), $imageRatio->getHeight());
+                $image = ImageUtils::createImage($sourceImagePath);
                 $productImageFiles[] = $image;
             }
         }

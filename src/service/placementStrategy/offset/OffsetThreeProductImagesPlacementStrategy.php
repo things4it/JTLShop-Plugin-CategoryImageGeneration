@@ -7,6 +7,7 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\of
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class OffsetThreeProductImagesPlacementStrategy implements ThreeProductImagePlacementStrategyInterface
 {
@@ -22,6 +23,10 @@ class OffsetThreeProductImagesPlacementStrategy implements ThreeProductImagePlac
 
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2, $productImage3)
     {
+        $productImage1 = ImageUtils::centerImageInSize($productImage1);
+        $productImage2 = ImageUtils::centerImageInSize($productImage2);
+        $productImage3 = ImageUtils::centerImageInSize($productImage3);
+
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
             \imagecopyresized($categoryImage, $productImage1, 0, 0, 0, 0, 500, 500, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 500, 24, 0, 0, 500, 500, imagesx($productImage2), imagesy($productImage2));
