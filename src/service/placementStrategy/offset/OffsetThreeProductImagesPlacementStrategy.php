@@ -32,9 +32,9 @@ class OffsetThreeProductImagesPlacementStrategy implements ThreeProductImagePlac
             \imagecopyresized($categoryImage, $productImage2, 500, 24, 0, 0, 500, 500, imagesx($productImage2), imagesy($productImage2));
             \imagecopyresized($categoryImage, $productImage3, 250, 500 + 24, 0, 0, 500, 500, imagesx($productImage3), imagesy($productImage3));
         } else {
-            \imagecopyresized($categoryImage, $productImage1, 0, 0, 0, 0, 500, 375, imagesx($productImage1), imagesy($productImage1));
-            \imagecopyresized($categoryImage, $productImage2, 500, 24, 0, 0, 500, 375, imagesx($productImage2), imagesy($productImage2));
-            \imagecopyresized($categoryImage, $productImage3, 250, 375 + 24, 0, 0, 500, 375, imagesx($productImage3), imagesy($productImage3));
+            \imagecopyresized($categoryImage, $productImage1, 124, 0, 0, 0, 375, 375, imagesx($productImage1), imagesy($productImage1));
+            \imagecopyresized($categoryImage, $productImage2, 500, 24, 0, 0, 375, 375, imagesx($productImage2), imagesy($productImage2));
+            \imagecopyresized($categoryImage, $productImage3, 312, 375 + 24, 0, 0, 375, 375, imagesx($productImage3), imagesy($productImage3));
         }
     }
 }

@@ -30,8 +30,8 @@ class OffsetTwoProductImagesPlacementStrategy implements TwoProductImagePlacemen
             \imagecopyresized($categoryImage, $productImage1, 0, 0, 0, 0, 500, 500, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 500, 500, 0, 0, 500, 500, imagesx($productImage2), imagesy($productImage2));
         } else {
-            \imagecopyresized($categoryImage, $productImage1, 0, 0, 0, 0, 500, 375, imagesx($productImage1), imagesy($productImage1));
-            \imagecopyresized($categoryImage, $productImage2, 500, 375, 0, 0, 500, 375, imagesx($productImage2), imagesy($productImage2));
+            \imagecopyresized($categoryImage, $productImage1, 130, 0, 0, 0, 375, 375, imagesx($productImage1), imagesy($productImage1));
+            \imagecopyresized($categoryImage, $productImage2, 130 + 375 + 2, 375, 0, 0, 375, 375, imagesx($productImage2), imagesy($productImage2));
         }
     }
 }

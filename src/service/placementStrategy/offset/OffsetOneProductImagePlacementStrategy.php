@@ -25,6 +25,10 @@ class OffsetOneProductImagePlacementStrategy implements OneProductImagePlacement
     {
         $productImage = ImageUtils::centerImageInSize($productImage);
 
-        \imagecopyresized($categoryImage, $productImage, 0, 0, 0, 0, $imageRatio->getWidth(), $imageRatio->getHeight(), imagesx($productImage), imagesy($productImage));
+        if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
+            \imagecopyresized($categoryImage, $productImage, 0, 0, 0, 0, $imageRatio->getWidth(), $imageRatio->getHeight(), imagesx($productImage), imagesy($productImage));
+        } else {
+            \imagecopyresized($categoryImage, $productImage, 162, 34, 0, 0, 700, 700, imagesx($productImage), imagesy($productImage));
+        }
     }
 }
