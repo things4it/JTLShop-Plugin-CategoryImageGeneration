@@ -25,9 +25,6 @@ class ImageUtils
 
     /**
      * @param string $originalImagePath
-     * @param int $targetWidth
-     * @param int $targetHeight
-     * @param int $padding
      * @return false|\GdImage|resource
      */
     public static function createImage(string $originalImagePath)
@@ -63,6 +60,29 @@ class ImageUtils
 
         $imageResized = ImageUtils::createTransparentImage($targetWidth, $targetHeight);
         \imagecopyresampled($imageResized, $originalImage, $offsetX, $offsetY, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
+        \imagedestroy($originalImage);
+
+        return $imageResized;
+    }
+
+    public static function resizeImageToMaxWidthHeight($originalImage, int $maxWidth = 640, int $maxHeight = 640, int $padding = 15)
+    {
+        $originalImageWidth = imagesx($originalImage);
+        $originalImageHeight = imagesy($originalImage);
+
+        if ($originalImageHeight > $originalImageWidth) {
+            $ratio = $maxHeight / $originalImageHeight;
+            $newHeight = $maxHeight;
+            $newWidth = $originalImageWidth * $ratio;
+        } else {
+            $ratio = $maxHeight / $originalImageWidth;
+            $newWidth = $maxWidth;
+            $newHeight = $originalImageHeight * $ratio;
+        }
+
+        $imageResized = ImageUtils::createTransparentImage($maxWidth, $maxHeight);
+        imagecopyresized($imageResized, $originalImage, 0, 0, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
+
         \imagedestroy($originalImage);
 
         return $imageResized;

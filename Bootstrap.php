@@ -25,6 +25,9 @@ use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedO
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetOneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -104,6 +107,7 @@ class Bootstrap extends Bootstrapper
 
         $this->provideImagePlacementStrategiesOffset($container);
         $this->provideImagePlacementStrategiesFlippedOffset($container);
+        $this->provideImagePlacementStrategiesRow($container);
     }
 
     /**
@@ -164,6 +168,21 @@ class Bootstrap extends Bootstrapper
 
         $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
             return new OffsetThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesRow(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(HorizontalOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new HorizontalOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(HorizontalTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new HorizontalTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(HorizontalThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new HorizontalThreeProductImagesPlacementStrategy();
         });
     }
 
