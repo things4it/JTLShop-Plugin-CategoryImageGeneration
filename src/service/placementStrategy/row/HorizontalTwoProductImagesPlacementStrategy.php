@@ -29,9 +29,13 @@ class HorizontalTwoProductImagesPlacementStrategy implements TwoProductImagePlac
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
             \imagecopyresized($categoryImage, $productImage1, 171, 342, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 171 + 340 + 1, 342, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
-        } else {
+        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
             \imagecopyresized($categoryImage, $productImage1, 171, 214, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 171 + 340 + 1, 214, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
+        } else {
+            \imagecopyresized($categoryImage, $productImage1, 171, 86, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
+            \imagecopyresized($categoryImage, $productImage2, 171 + 340 + 1, 86, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
+
         }
     }
 }

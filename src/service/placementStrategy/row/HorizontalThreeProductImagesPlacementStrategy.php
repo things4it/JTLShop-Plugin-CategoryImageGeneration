@@ -28,15 +28,17 @@ class HorizontalThreeProductImagesPlacementStrategy implements ThreeProductImage
         $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340, 1);
 
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
-            // 1024, 1024
             \imagecopyresized($categoryImage, $productImage1, 0, 342, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 340 + 1, 342, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
             \imagecopyresized($categoryImage, $productImage3, 340 + 1 + 340 + 1, 342, 0, 0, 340, 340, imagesx($productImage3), imagesy($productImage3));
-        } else {
-            // 1024, 768
+        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
             \imagecopyresized($categoryImage, $productImage1, 0, 214, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
             \imagecopyresized($categoryImage, $productImage2, 340 + 1, 214, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
             \imagecopyresized($categoryImage, $productImage3, 340 + 1 + 340 + 1, 214, 0, 0, 340, 340, imagesx($productImage3), imagesy($productImage3));
+        } else {
+            \imagecopyresized($categoryImage, $productImage1, 0, 86, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
+            \imagecopyresized($categoryImage, $productImage2, 340 + 1, 86, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
+            \imagecopyresized($categoryImage, $productImage3, 340 + 1 + 340 + 1, 86, 0, 0, 340, 340, imagesx($productImage3), imagesy($productImage3));
         }
     }
 }

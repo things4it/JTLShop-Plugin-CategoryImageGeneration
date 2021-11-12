@@ -27,8 +27,10 @@ class HorizontalOneProductImagePlacementStrategy implements OneProductImagePlace
 
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
             \imagecopyresized($categoryImage, $productImage, 342, 342, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
-        }else{
+        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
             \imagecopyresized($categoryImage, $productImage, 342, 214, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
+        } else {
+            \imagecopyresized($categoryImage, $productImage, 342, 86, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
         }
 
     }

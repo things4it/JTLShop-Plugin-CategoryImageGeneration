@@ -7,6 +7,7 @@ class ImageRatio
 {
     public const RATIO_1_TO_1 = '1:1';
     public const RATIO_4_TO_3 = '4:3';
+    public const RATIO_4_TO_2 = '4:2';
 
     /**
      * @var string
