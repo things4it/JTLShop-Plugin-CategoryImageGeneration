@@ -23,7 +23,7 @@ class HorizontalCroppedOneProductImagePlacementStrategy implements OneProductIma
 
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage)
     {
-        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 1);
+        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 0);
 
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
             \imagecopyresized($categoryImage, $productImage, 342, 342, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));

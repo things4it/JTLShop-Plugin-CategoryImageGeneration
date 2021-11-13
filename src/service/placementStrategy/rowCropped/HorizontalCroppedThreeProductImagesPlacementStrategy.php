@@ -23,9 +23,9 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
 
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2, $productImage3)
     {
-        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 1);
-        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340, 1);
-        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340, 1);
+        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 0);
+        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340, 0);
+        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340, 0);
 
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
@@ -41,11 +41,11 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
         $productImage3Height = imagesy($productImage3);
 
         $contentWidth = $productImage1Width + $productImage2Width + $productImage3Width;
-        $contentWidthPadding = (1024 - $contentWidth) / 2;
+        $contentWidthPaddingX = (1024 - $contentWidth - (HorizontalCroppedConstants::PADDING * 2)) / 2;
 
-        $productImage1Padding = $contentWidthPadding;
-        $productImage2Padding = $contentWidthPadding + $productImage1Width;
-        $productImage3Padding = $contentWidthPadding + $productImage1Width + $productImage2Width;
+        $productImage1Padding = $contentWidthPaddingX;
+        $productImage2Padding = $contentWidthPaddingX + $productImage1Width + HorizontalCroppedConstants::PADDING;
+        $productImage3Padding = $productImage2Padding + $productImage2Width + HorizontalCroppedConstants::PADDING;
 
         if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
             \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 342, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
