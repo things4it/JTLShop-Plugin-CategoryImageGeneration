@@ -29,28 +29,13 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
 
-        $productImage1Width = imagesx($productImage1);
-        $productImage1Height = imagesy($productImage1);
+        $productImages = array($productImage1, $productImage2);
 
-        $productImage2Width = imagesx($productImage2);
-        $productImage2Height = imagesy($productImage2);
-
-        $contentWidth = $productImage1Width + $productImage2Width;
-        $contentWidthPaddingX = (1024 - $contentWidth - HorizontalCroppedConstants::PADDING) / 2;
-
-        $productImage1Padding = $contentWidthPaddingX;
-        $productImage2Padding = $contentWidthPaddingX + $productImage1Width + HorizontalCroppedConstants::PADDING;
-
-        if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 342, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 342, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 214, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 214, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-        } else {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 86, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 86, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-
+        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
+        $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
+        foreach ($productImages as $productImage){
+            HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
+            $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }
     }
 }

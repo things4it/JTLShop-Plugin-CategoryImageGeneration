@@ -31,34 +31,14 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
         $productImage3 = \imagecropauto($productImage3, \IMG_CROP_SIDES);
 
-        $productImage1Width = imagesx($productImage1);
-        $productImage1Height = imagesy($productImage1);
+        $productImages = array($productImage1, $productImage2, $productImage3);
 
-        $productImage2Width = imagesx($productImage2);
-        $productImage2Height = imagesy($productImage2);
-
-        $productImage3Width = imagesx($productImage3);
-        $productImage3Height = imagesy($productImage3);
-
-        $contentWidth = $productImage1Width + $productImage2Width + $productImage3Width;
-        $contentWidthPaddingX = (1024 - $contentWidth - (HorizontalCroppedConstants::PADDING * 2)) / 2;
-
-        $productImage1Padding = $contentWidthPaddingX;
-        $productImage2Padding = $contentWidthPaddingX + $productImage1Width + HorizontalCroppedConstants::PADDING;
-        $productImage3Padding = $productImage2Padding + $productImage2Width + HorizontalCroppedConstants::PADDING;
-
-        if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 342, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 342, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-            \imagecopyresized($categoryImage, $productImage3, $productImage3Padding, 342, 0, 0, $productImage3Width, $productImage3Height, $productImage3Width, $productImage3Height);
-        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 214, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 214, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-            \imagecopyresized($categoryImage, $productImage3, $productImage3Padding, 214, 0, 0, $productImage3Width, $productImage3Height, $productImage3Width, $productImage3Height);
-        } else {
-            \imagecopyresized($categoryImage, $productImage1, $productImage1Padding, 86, 0, 0, $productImage1Width, $productImage1Height, $productImage1Width, $productImage1Height);
-            \imagecopyresized($categoryImage, $productImage2, $productImage2Padding, 86, 0, 0, $productImage2Width, $productImage2Height, $productImage2Width, $productImage2Height);
-            \imagecopyresized($categoryImage, $productImage3, $productImage3Padding, 86, 0, 0, $productImage3Width, $productImage3Height, $productImage3Width, $productImage3Height);
+        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
+        $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
+        foreach ($productImages as $productImage){
+            HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
+            $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }
     }
+
 }
