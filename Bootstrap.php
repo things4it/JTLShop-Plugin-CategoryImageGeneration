@@ -28,6 +28,9 @@ use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\O
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalOneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\HorizontalCroppedOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\HorizontalCroppedThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\HorizontalCroppedTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -108,6 +111,7 @@ class Bootstrap extends Bootstrapper
         $this->provideImagePlacementStrategiesOffset($container);
         $this->provideImagePlacementStrategiesFlippedOffset($container);
         $this->provideImagePlacementStrategiesRow($container);
+        $this->provideImagePlacementStrategiesRowCropped($container);
     }
 
     /**
@@ -183,6 +187,21 @@ class Bootstrap extends Bootstrapper
 
         $container->setFactory(HorizontalThreeProductImagesPlacementStrategy::getCode(), function ($container) {
             return new HorizontalThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesRowCropped(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(HorizontalCroppedOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new HorizontalCroppedOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(HorizontalCroppedTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new HorizontalCroppedTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(HorizontalCroppedThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new HorizontalCroppedThreeProductImagesPlacementStrategy();
         });
     }
 

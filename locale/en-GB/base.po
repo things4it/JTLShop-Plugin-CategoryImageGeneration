@@ -89,5 +89,8 @@ msgstr "Offset"
 msgid "admin.settings.image-strategy.horizontal"
 msgstr "Row"
 
+msgid "admin.settings.image-strategy.horizontal-cropped"
+msgstr "Row - Cropped"
+
 msgid "admin.settings.image-strategy.flipped-offset"
 msgstr "Flipped Offset (for demonstration of the extensibility)"
