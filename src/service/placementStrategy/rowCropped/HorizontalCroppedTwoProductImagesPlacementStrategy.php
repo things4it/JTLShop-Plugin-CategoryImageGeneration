@@ -29,7 +29,7 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
 
-        $productImages = array($productImage1, $productImage2);
+        $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2);
 
         $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
         $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
@@ -37,5 +37,16 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
             HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
             $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }
+    }
+
+    /**
+     * @param ...$productImages
+     * @return array
+     */
+    private function createProductImageArraySortedByHeight(... $productImages): array
+    {
+        HorizontalCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+
+        return array($productImages[0], $productImages[1]);
     }
 }

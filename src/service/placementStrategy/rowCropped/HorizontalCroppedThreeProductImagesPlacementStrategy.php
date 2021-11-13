@@ -31,7 +31,7 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
         $productImage3 = \imagecropauto($productImage3, \IMG_CROP_SIDES);
 
-        $productImages = array($productImage1, $productImage2, $productImage3);
+        $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2, $productImage3);
 
         $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
         $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
@@ -39,6 +39,17 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
             HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
             $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }
+    }
+
+    /**
+     * @param ...$productImages
+     * @return array
+     */
+    private function createProductImageArraySortedByHeight(... $productImages): array
+    {
+        HorizontalCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+
+        return array($productImages[0], $productImages[2], $productImages[1]);
     }
 
 }

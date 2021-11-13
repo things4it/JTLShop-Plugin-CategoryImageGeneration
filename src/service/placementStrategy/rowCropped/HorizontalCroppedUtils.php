@@ -7,6 +7,16 @@ use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 class HorizontalCroppedUtils
 {
     /**
+     * @param array $images
+     */
+    public static function sortImagesArrayByHeightAsc(array &$images)
+    {
+        usort($images, function($a, $b) {
+            return imagesy($a) - imagesy($b);
+        });
+    }
+
+    /**
      * @param ImageRatio $imageRatio
      * @return int
      */
