@@ -21,6 +21,12 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
         return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-two";
     }
 
+    /**
+     * @param $categoryImage
+     * @param ImageRatio $imageRatio
+     * @param $productImage1
+     * @param $productImage2
+     */
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2)
     {
         $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 0);
@@ -31,9 +37,9 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
 
         $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2);
 
-        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
         $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
         foreach ($productImages as $productImage){
+            $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
             HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
             $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }

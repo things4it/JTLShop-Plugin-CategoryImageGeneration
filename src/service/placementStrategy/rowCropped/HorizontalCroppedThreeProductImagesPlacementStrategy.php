@@ -21,6 +21,13 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
         return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-three";
     }
 
+    /**
+     * @param $categoryImage
+     * @param ImageRatio $imageRatio
+     * @param $productImage1
+     * @param $productImage2
+     * @param $productImage3
+     */
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2, $productImage3)
     {
         $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 0);
@@ -33,9 +40,9 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
 
         $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2, $productImage3);
 
-        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
         $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
         foreach ($productImages as $productImage){
+            $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
             HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
             $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
         }

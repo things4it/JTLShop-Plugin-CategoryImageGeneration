@@ -17,18 +17,14 @@ class HorizontalCroppedUtils
     }
 
     /**
+     * @param $productImage
      * @param ImageRatio $imageRatio
      * @return int
      */
-    public static function calculateOffsetYByRatio(ImageRatio $imageRatio): int
+    public static function calculateOffsetYByRatio($productImage, ImageRatio $imageRatio): int
     {
-        if ($imageRatio->getCode() == ImageRatio::RATIO_1_TO_1) {
-            return 342;
-        } else if($imageRatio->getCode() == ImageRatio::RATIO_4_TO_3) {
-            return 214;
-        } else {
-            return 86;
-        }
+        $imageHeight = imagesy($productImage);
+        return ($imageRatio->getHeight() - $imageHeight) / 2;
     }
 
     /**

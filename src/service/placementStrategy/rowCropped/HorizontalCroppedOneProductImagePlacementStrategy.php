@@ -21,11 +21,16 @@ class HorizontalCroppedOneProductImagePlacementStrategy implements OneProductIma
         return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-one";
     }
 
+    /**
+     * @param $categoryImage
+     * @param ImageRatio $imageRatio
+     * @param $productImage
+     */
     public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage)
     {
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 0);
 
-        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($imageRatio);
+        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
         \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
     }
 }
