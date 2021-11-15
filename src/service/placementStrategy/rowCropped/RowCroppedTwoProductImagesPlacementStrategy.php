@@ -9,16 +9,16 @@ use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
-class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlacementStrategyInterface
+class RowCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlacementStrategyInterface
 {
     public static function getName(): string
     {
-        return __("admin.settings.image-strategy.horizontal-cropped");
+        return __("admin.settings.image-strategy.row-cropped");
     }
 
     public static function getCode(): string
     {
-        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-two";
+        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-cropped-two";
     }
 
     /**
@@ -37,11 +37,11 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
 
         $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2);
 
-        $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
+        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImages);
         foreach ($productImages as $productImage){
-            $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
-            HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
-            $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
+            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
+            RowCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
+            $offsetX += imagesx($productImage) + RowCroppedConstants::PADDING;
         }
     }
 
@@ -51,7 +51,7 @@ class HorizontalCroppedTwoProductImagesPlacementStrategy implements TwoProductIm
      */
     private function createProductImageArraySortedByHeight(... $productImages): array
     {
-        HorizontalCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+        RowCroppedUtils::sortImagesArrayByHeightAsc($productImages);
 
         return array($productImages[0], $productImages[1]);
     }

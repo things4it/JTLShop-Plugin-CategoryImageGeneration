@@ -9,16 +9,16 @@ use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
-class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProductImagePlacementStrategyInterface
+class RowCroppedThreeProductImagesPlacementStrategy implements ThreeProductImagePlacementStrategyInterface
 {
     public static function getName(): string
     {
-        return __("admin.settings.image-strategy.horizontal-cropped");
+        return __("admin.settings.image-strategy.row-cropped");
     }
 
     public static function getCode(): string
     {
-        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-three";
+        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-cropped-three";
     }
 
     /**
@@ -40,11 +40,11 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
 
         $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2, $productImage3);
 
-        $offsetX = HorizontalCroppedUtils::calculateOffsetXForImagesBlock($productImages);
+        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImages);
         foreach ($productImages as $productImage){
-            $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
-            HorizontalCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
-            $offsetX += imagesx($productImage) + HorizontalCroppedConstants::PADDING;
+            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
+            RowCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
+            $offsetX += imagesx($productImage) + RowCroppedConstants::PADDING;
         }
     }
 
@@ -54,7 +54,7 @@ class HorizontalCroppedThreeProductImagesPlacementStrategy implements ThreeProdu
      */
     private function createProductImageArraySortedByHeight(... $productImages): array
     {
-        HorizontalCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+        RowCroppedUtils::sortImagesArrayByHeightAsc($productImages);
 
         return array($productImages[0], $productImages[2], $productImages[1]);
     }

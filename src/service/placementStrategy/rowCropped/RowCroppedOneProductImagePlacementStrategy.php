@@ -9,16 +9,16 @@ use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
-class HorizontalCroppedOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
+class RowCroppedOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
     public static function getName(): string
     {
-        return __("admin.settings.image-strategy.horizontal-cropped");
+        return __("admin.settings.image-strategy.row-cropped");
     }
 
     public static function getCode(): string
     {
-        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "horizontal-cropped-one";
+        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-cropped-one";
     }
 
     /**
@@ -30,7 +30,7 @@ class HorizontalCroppedOneProductImagePlacementStrategy implements OneProductIma
     {
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 0);
 
-        $offsetY = HorizontalCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
+        $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
         \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
     }
 }

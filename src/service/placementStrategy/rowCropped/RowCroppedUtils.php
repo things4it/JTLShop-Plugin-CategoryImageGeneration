@@ -4,7 +4,7 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 
-class HorizontalCroppedUtils
+class RowCroppedUtils
 {
     /**
      * @param array $images
@@ -38,7 +38,7 @@ class HorizontalCroppedUtils
             $widthOffAllImages += imagesx($productImage);
         }
 
-        return (1024 - $widthOffAllImages - (HorizontalCroppedConstants::PADDING * 2)) / 2;
+        return (1024 - $widthOffAllImages - (RowCroppedConstants::PADDING * 2)) / 2;
     }
 
     /**

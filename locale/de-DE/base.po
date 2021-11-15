@@ -89,7 +89,7 @@ msgstr "Versetzt"
 msgid "admin.settings.image-strategy.row"
 msgstr "In Reihe"
 
-msgid "admin.settings.image-strategy.horizontal-cropped"
+msgid "admin.settings.image-strategy.row-cropped"
 msgstr "In Reihe - Ausgeschnitten"
 
 msgid "admin.settings.image-strategy.flipped-offset"
