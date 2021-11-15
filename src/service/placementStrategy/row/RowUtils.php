@@ -4,7 +4,7 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 
-class HorizontalUtils
+class RowUtils
 {
 
     /**

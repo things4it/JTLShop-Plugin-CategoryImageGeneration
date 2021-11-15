@@ -5,7 +5,7 @@
 
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\HorizontalTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\HorizontalCroppedTwoProductImagesPlacementStrategy;
 
 $option = new stdClass();
@@ -21,8 +21,8 @@ $option->nSort = 2;
 $options[] = $option;
 
 $option = new stdClass();
-$option->cWert = HorizontalTwoProductImagesPlacementStrategy::getCode();
-$option->cName = HorizontalTwoProductImagesPlacementStrategy::getName();
+$option->cWert = RowTwoProductImagesPlacementStrategy::getCode();
+$option->cName = RowTwoProductImagesPlacementStrategy::getName();
 $option->nSort = 3;
 $options[] = $option;
 

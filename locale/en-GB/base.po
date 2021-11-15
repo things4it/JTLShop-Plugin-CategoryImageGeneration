@@ -86,7 +86,7 @@ msgstr "The settings only take effect at the next start of the generation cronjo
 msgid "admin.settings.image-strategy.offset"
 msgstr "Offset"
 
-msgid "admin.settings.image-strategy.horizontal"
+msgid "admin.settings.image-strategy.row"
 msgstr "Row"
 
 msgid "admin.settings.image-strategy.horizontal-cropped"

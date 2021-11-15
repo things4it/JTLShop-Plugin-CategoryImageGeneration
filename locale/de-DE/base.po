@@ -86,7 +86,7 @@ msgstr "Die Einstellungen wirken sich erst beim nächsten Start generieungs-Cron
 msgid "admin.settings.image-strategy.offset"
 msgstr "Versetzt"
 
-msgid "admin.settings.image-strategy.horizontal"
+msgid "admin.settings.image-strategy.row"
 msgstr "In Reihe"
 
 msgid "admin.settings.image-strategy.horizontal-cropped"
