@@ -35,24 +35,27 @@ class RowCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlac
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
 
-        $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2);
+        $productImage1Data = new RowCroppedImageData($productImage1);
+        $productImage2Data = new RowCroppedImageData($productImage2);
 
-        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImages);
-        foreach ($productImages as $productImage){
-            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
-            RowCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
-            $offsetX += imagesx($productImage) + RowCroppedConstants::PADDING;
+        $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data);
+
+        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImageDatas);
+        foreach ($productImageDatas as $productImageData){
+            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImageData, $imageRatio);
+            RowCroppedUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
+            $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING;
         }
     }
 
     /**
-     * @param ...$productImages
-     * @return array
+     * @param RowCroppedImageData[] $productImageDatas
+     * @return RowCroppedImageData[]
      */
-    private function createProductImageArraySortedByHeight(... $productImages): array
+    private function createProductImageArraySortedByHeight(... $productImageDatas): array
     {
-        RowCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+        RowCroppedUtils::sortImagesArrayByHeightAsc($productImageDatas);
 
-        return array($productImages[0], $productImages[1]);
+        return array($productImageDatas[0], $productImageDatas[1]);
     }
 }

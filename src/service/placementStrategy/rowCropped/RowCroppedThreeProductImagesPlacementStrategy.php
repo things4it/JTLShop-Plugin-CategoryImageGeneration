@@ -38,25 +38,29 @@ class RowCroppedThreeProductImagesPlacementStrategy implements ThreeProductImage
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
         $productImage3 = \imagecropauto($productImage3, \IMG_CROP_SIDES);
 
-        $productImages = $this->createProductImageArraySortedByHeight($productImage1, $productImage2, $productImage3);
+        $productImage1Data = new RowCroppedImageData($productImage1);
+        $productImage2Data = new RowCroppedImageData($productImage2);
+        $productImage3Data = new RowCroppedImageData($productImage3);
 
-        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImages);
-        foreach ($productImages as $productImage){
-            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
-            RowCroppedUtils::copyImage($productImage, $offsetX, $offsetY, $categoryImage);
-            $offsetX += imagesx($productImage) + RowCroppedConstants::PADDING;
+        $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data, $productImage3Data);
+
+        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImageDatas);
+        foreach ($productImageDatas as $productImageData){
+            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImageData, $imageRatio);
+            RowCroppedUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
+            $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING;
         }
     }
 
     /**
-     * @param ...$productImages
-     * @return array
+     * @param RowCroppedImageData[] $productImageDatas
+     * @return RowCroppedImageData[]
      */
-    private function createProductImageArraySortedByHeight(... $productImages): array
+    private function createProductImageArraySortedByHeight(... $productImageDatas): array
     {
-        RowCroppedUtils::sortImagesArrayByHeightAsc($productImages);
+        RowCroppedUtils::sortImagesArrayByHeightAsc($productImageDatas);
 
-        return array($productImages[0], $productImages[2], $productImages[1]);
+        return array($productImageDatas[0], $productImageDatas[2], $productImageDatas[1]);
     }
 
 }

@@ -30,7 +30,21 @@ class RowCroppedOneProductImagePlacementStrategy implements OneProductImagePlace
     {
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 0);
 
-        $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImage, $imageRatio);
-        \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
+        $productImageData = new RowCroppedImageData($productImage);
+
+        $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImageData, $imageRatio);
+
+        \imagecopyresized(
+            $categoryImage,
+            $productImageData->getImage(),
+            342,
+            $offsetY,
+            0,
+            0,
+            340,
+            340,
+            $productImageData->getWidth(),
+            $productImageData->getHeight()
+        );
     }
 }
