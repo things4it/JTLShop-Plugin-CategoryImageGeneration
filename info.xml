@@ -30,15 +30,6 @@
                         <Option value="3" sort="3">3</Option>
                     </RadioOptions>
                 </Setting>
-                <Setting type="radio" initialValue="1:1" sort="2" conf="Y">
-                    <Name>Verhältnis des Kategoriebilds</Name>
-                    <ValueName>t4it_category_image_generation-categoryImageRatio</ValueName>
-                    <RadioOptions>
-                        <Option value="1:1" sort="1">1:1</Option>
-                        <Option value="4:3" sort="2">4:3</Option>
-                        <Option value="4:2" sort="3">4:2</Option>
-                    </RadioOptions>
-                </Setting>
                 <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-one" sort="3" conf="Y">
                     <Name>Modus bei einem Bild</Name>
                     <ValueName>t4it_category_image_generation-placement_strategy_for_1_image</ValueName>

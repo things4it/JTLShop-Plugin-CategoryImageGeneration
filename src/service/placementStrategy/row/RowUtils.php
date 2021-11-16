@@ -8,6 +8,8 @@ class RowUtils
 {
 
     /**
+     * TODO: check if we still need it without ratio-config
+     *
      * @param ImageRatio $imageRatio
      * @return int
      */

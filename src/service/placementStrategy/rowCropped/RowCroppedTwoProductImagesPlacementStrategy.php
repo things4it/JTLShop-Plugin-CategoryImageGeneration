@@ -5,12 +5,14 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
-use Plugin\t4it_category_image_generation\src\model\ImageRatio;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class RowCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlacementStrategyInterface
 {
+    private static int $WIDTH = 1024;
+    private static int $HEIGHT = 512;
+
     public static function getName(): string
     {
         return __("admin.settings.image-strategy.row-cropped");
@@ -22,13 +24,13 @@ class RowCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlac
     }
 
     /**
-     * @param $categoryImage
-     * @param ImageRatio $imageRatio
      * @param $productImage1
      * @param $productImage2
      */
-    public function placeProductImages($categoryImage, ImageRatio $imageRatio, $productImage1, $productImage2)
+    public function placeProductImages($productImage1, $productImage2)
     {
+        $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
+
         $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 0);
         $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340, 0);
 
@@ -42,10 +44,13 @@ class RowCroppedTwoProductImagesPlacementStrategy implements TwoProductImagePlac
 
         $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImageDatas);
         foreach ($productImageDatas as $productImageData){
-            $offsetY = RowCroppedUtils::calculateOffsetYByRatio($productImageData, $imageRatio);
+            // TODO: current impl is for 4:2 ratio add own strategies for other ratios
+            $offsetY = RowCroppedUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
             RowCroppedUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
             $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING;
         }
+
+        return $categoryImage;
     }
 
     /**

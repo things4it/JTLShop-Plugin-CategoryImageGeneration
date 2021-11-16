@@ -21,9 +21,6 @@ msgstr "Max count of article images"
 msgid "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
 msgstr "Max count of article images which will be used for the generation of one category image"
 
-msgid "Verhältnis des Kategoriebilds"
-msgstr "Ratio of the category image"
-
 msgid "Modus bei einem Bild"
 msgstr "Mode for one image"
 

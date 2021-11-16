@@ -2,8 +2,6 @@
 
 namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped;
 
-use Plugin\t4it_category_image_generation\src\model\ImageRatio;
-
 class RowCroppedUtils
 {
     /**
@@ -18,12 +16,12 @@ class RowCroppedUtils
 
     /**
      * @param RowCroppedImageData $productImageData
-     * @param ImageRatio $imageRatio
+     * @param int $height
      * @return int
      */
-    public static function calculateOffsetYByRatio(RowCroppedImageData $productImageData, ImageRatio $imageRatio): int
+    public static function calculateOffsetYByTargetImageHeight(RowCroppedImageData $productImageData, int $height): int
     {
-        return ($imageRatio->getHeight() - $productImageData->getHeight()) / 2;
+        return ($height - $productImageData->getHeight()) / 2;
     }
 
     /**

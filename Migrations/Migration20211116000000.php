@@ -27,6 +27,7 @@ class Migration20211116000000 extends Migration implements IMigration
      */
     public function up()
     {
+        // remove flipped-offset sample strategy -> migrate to normal 'offset'
         $this->getDB()->executeQueryPrepared(self::SQL_FIX_INITIAL_PLUGIN_CONFIG_VALUE, [
             'wert' => OffsetOneProductImagePlacementStrategy::getCode(),
             'wertAlt' => Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "flipped-offset-one",
@@ -44,6 +45,9 @@ class Migration20211116000000 extends Migration implements IMigration
             'wertAlt' => Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "flipped-offset-three",
             'name' => Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TREE_IMAGES
         ]);
+
+        // remove ratio-setting
+        $this->getDB()->delete('tplugineinstellungen', 'cName', 't4it_category_image_generation-categoryImageRatio');
     }
 
     public function down()

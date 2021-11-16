@@ -7,8 +7,6 @@ use JTL\Media\Image\Category;
 use JTL\Plugin\PluginInterface;
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
-use Plugin\t4it_category_image_generation\src\model\ImageRatio;
-use Plugin\t4it_category_image_generation\src\model\ImageRatioFactory;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 
@@ -39,12 +37,6 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
      */
     private $maxArticleImages;
 
-
-    /**
-     * @var ImageRatio
-     */
-    private $imageRatio;
-
     /**
      * @var mixed|string|null
      */
@@ -71,7 +63,6 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
         $this->plugin = $plugin;
 
         $this->maxArticleImages = (int)$plugin->getConfig()->getValue(Constants::SETTINGS_MAX_ARTICLE_IMAGES_PER_CATEGORY);
-        $this->imageRatio = ImageRatioFactory::createFromRatioString((string)$plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_RATIO));
         $this->imageStrategyOneImage = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_ONE_IMAGE);
         $this->imageStrategyTwoImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TWO_IMAGES);
         $this->imageStrategyThreeImages = $plugin->getConfig()->getValue(Constants::SETTINGS_CATEGORY_IMAGE_STRATEGY_FOR_TREE_IMAGES);
@@ -86,7 +77,6 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
             $categoryImagePath = CategoryImageGenerator::generateCategoryImage(
                 $categoryId,
                 $randomArticleImages,
-                $this->imageRatio,
                 $this->imageStrategyOneImage,
                 $this->imageStrategyTwoImages,
                 $this->imageStrategyThreeImages
