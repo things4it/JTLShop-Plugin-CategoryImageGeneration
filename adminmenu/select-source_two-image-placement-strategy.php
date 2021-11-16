@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\PhpUtils;
 
-$implementsTwoProductImagePlacementStrategy = PhpUtils::getImplementations(ThreeProductImagePlacementStrategyInterface::class);
+$implementsTwoProductImagePlacementStrategy = PhpUtils::getImplementations(TwoProductImagePlacementStrategyInterface::class);
 
 $sort = 1;
 foreach ($implementsTwoProductImagePlacementStrategy as $strategy){

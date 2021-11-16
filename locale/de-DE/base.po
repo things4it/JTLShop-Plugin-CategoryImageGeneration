@@ -28,7 +28,7 @@ msgid "Modus bei einem Bild"
 msgstr "Modus bei einem Bild"
 
 msgid "Modus bei zwei Bildern"
-msgstr "Modus bei einem Bild"
+msgstr "Modus bei zwei Bildern"
 
 msgid "Modus bei drei Bildern"
 msgstr "Modus bei drei Bildern"
