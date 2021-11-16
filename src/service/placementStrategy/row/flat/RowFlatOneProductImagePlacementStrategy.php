@@ -1,26 +1,26 @@
 <?php
 
 
-namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\row;
+namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat;
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
-class RowOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
+class RowFlatOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
     private static int $WIDTH = 1024;
-    private static int $HEIGHT = 512;
+    private static int $HEIGHT = 342;
 
     public static function getName(): string
     {
-        return __("admin.settings.image-strategy.row");
+        return __("admin.settings.image-strategy.row-flat");
     }
 
     public static function getCode(): string
     {
-        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-one";
+        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-flat-one";
     }
 
     public function placeProductImages($productImage)
@@ -29,12 +29,7 @@ class RowOneProductImagePlacementStrategy implements OneProductImagePlacementStr
 
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 1);
 
-        $offsetY = 86;
-
-        // TODO: current impl is for 4:2 ratio add own strategies for other ratios
-//        $offsetY = RowUtils::calculateOffsetYByRatio($imageRatio);
-
-        \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
+        \imagecopyresized($categoryImage, $productImage, 342, 1, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
 
         return $categoryImage;
     }

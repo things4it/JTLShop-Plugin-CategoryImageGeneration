@@ -86,8 +86,8 @@ msgstr "Versetzt (Ratio 1:1)"
 msgid "admin.settings.image-strategy.offset-ratio4to3"
 msgstr "Versetzt (Ratio 4:3)"
 
-msgid "admin.settings.image-strategy.row"
-msgstr "In Reihe"
+msgid "admin.settings.image-strategy.row-flat"
+msgstr "In Reihe (Flach, Ratio ~4:1?)"
 
-msgid "admin.settings.image-strategy.row-cropped"
-msgstr "In Reihe - Ausgeschnitten"
+msgid "admin.settings.image-strategy.row-cropped-flat"
+msgstr "In Reihe - Ausgeschnitten (Flach, Ratio ~4:1?)"

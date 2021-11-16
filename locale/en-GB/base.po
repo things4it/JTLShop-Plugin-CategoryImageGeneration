@@ -86,8 +86,8 @@ msgstr "Offset (Ratio 1:1)"
 msgid "admin.settings.image-strategy.offset-ratio4to3"
 msgstr "Offset (Ratio 4:3)"
 
-msgid "admin.settings.image-strategy.row"
-msgstr "Row"
+msgid "admin.settings.image-strategy.row-flat"
+msgstr "Row (Flat, Ratio ~4:1?)"
 
-msgid "admin.settings.image-strategy.row-cropped"
-msgstr "Row - Cropped"
+msgid "admin.settings.image-strategy.row-cropped-flat"
+msgstr "Row Cropped (Flat, Ratio ~4:1?)"

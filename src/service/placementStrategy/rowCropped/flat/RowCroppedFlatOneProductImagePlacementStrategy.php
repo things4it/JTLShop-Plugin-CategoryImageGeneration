@@ -1,26 +1,28 @@
 <?php
 
 
-namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped;
+namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat;
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedImageData;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedUtils;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
-class RowCroppedOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
+class RowCroppedFlatOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
     private static int $WIDTH = 1024;
-    private static int $HEIGHT = 512;
+    private static int $HEIGHT = 340;
 
     public static function getName(): string
     {
-        return __("admin.settings.image-strategy.row-cropped");
+        return __("admin.settings.image-strategy.row-cropped-flat");
     }
 
     public static function getCode(): string
     {
-        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-cropped-one";
+        return Constants::IMAGE_GENERATION_STRATEGY_PREFIX . "row-cropped-flat-one";
     }
 
     /**
@@ -34,7 +36,6 @@ class RowCroppedOneProductImagePlacementStrategy implements OneProductImagePlace
 
         $productImageData = new RowCroppedImageData($productImage);
 
-        // TODO: current impl is for 4:2 ratio add own strategies for other ratios
         $offsetY = RowCroppedUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
 
         \imagecopyresized(

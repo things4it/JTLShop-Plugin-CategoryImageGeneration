@@ -25,12 +25,12 @@ use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\r
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3OneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3ThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3TwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowTwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -110,8 +110,8 @@ class Bootstrap extends Bootstrapper
 
         $this->provideImagePlacementStrategiesOffsetRatio1to1($container);
         $this->provideImagePlacementStrategiesOffsetRatio4to3($container);
-        $this->provideImagePlacementStrategiesRow($container);
-        $this->provideImagePlacementStrategiesRowCropped($container);
+        $this->provideImagePlacementStrategiesRowFlat($container);
+        $this->provideImagePlacementStrategiesRowCroppedFlat($container);
     }
 
     /**
@@ -190,33 +190,33 @@ class Bootstrap extends Bootstrapper
         });
     }
 
-    private function provideImagePlacementStrategiesRow(\JTL\Services\DefaultServicesInterface $container): void
+    private function provideImagePlacementStrategiesRowFlat(\JTL\Services\DefaultServicesInterface $container): void
     {
-        $container->setFactory(RowOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new RowOneProductImagePlacementStrategy();
+        $container->setFactory(RowFlatOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new RowFlatOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(RowTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new RowTwoProductImagesPlacementStrategy();
+        $container->setFactory(RowFlatTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowFlatTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(RowThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new RowThreeProductImagesPlacementStrategy();
+        $container->setFactory(RowFlatThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowFlatThreeProductImagesPlacementStrategy();
         });
     }
 
-    private function provideImagePlacementStrategiesRowCropped(\JTL\Services\DefaultServicesInterface $container): void
+    private function provideImagePlacementStrategiesRowCroppedFlat(\JTL\Services\DefaultServicesInterface $container): void
     {
-        $container->setFactory(RowCroppedOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new RowCroppedOneProductImagePlacementStrategy();
+        $container->setFactory(RowCroppedFlatOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatOneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(RowCroppedTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new RowCroppedTwoProductImagesPlacementStrategy();
+        $container->setFactory(RowCroppedFlatTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatTwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(RowCroppedThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new RowCroppedThreeProductImagesPlacementStrategy();
+        $container->setFactory(RowCroppedFlatThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatThreeProductImagesPlacementStrategy();
         });
     }
 
