@@ -80,8 +80,11 @@ msgstr "The settings only take effect at the next start of the generation cronjo
 
 ## image-strategies
 
-msgid "admin.settings.image-strategy.offset"
-msgstr "Offset"
+msgid "admin.settings.image-strategy.offset-ratio1to1"
+msgstr "Offset (Ratio 1:1)"
+
+msgid "admin.settings.image-strategy.offset-ratio4to3"
+msgstr "Offset (Ratio 4:3)"
 
 msgid "admin.settings.image-strategy.row"
 msgstr "Row"

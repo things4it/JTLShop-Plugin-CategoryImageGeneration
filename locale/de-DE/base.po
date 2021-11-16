@@ -80,8 +80,11 @@ msgstr "Die Einstellungen wirken sich erst beim nächsten Start generieungs-Cron
 
 ## image-strategies
 
-msgid "admin.settings.image-strategy.offset"
-msgstr "Versetzt"
+msgid "admin.settings.image-strategy.offset-ratio1to1"
+msgstr "Versetzt (Ratio 1:1)"
+
+msgid "admin.settings.image-strategy.offset-ratio4to3"
+msgstr "Versetzt (Ratio 4:3)"
 
 msgid "admin.settings.image-strategy.row"
 msgstr "In Reihe"

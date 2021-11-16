@@ -19,9 +19,12 @@ use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1OneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1ThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1TwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3OneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3ThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3TwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowOneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\RowTwoProductImagesPlacementStrategy;
@@ -105,7 +108,8 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB(), $this->getPlugin());
         });
 
-        $this->provideImagePlacementStrategiesOffset($container);
+        $this->provideImagePlacementStrategiesOffsetRatio1to1($container);
+        $this->provideImagePlacementStrategiesOffsetRatio4to3($container);
         $this->provideImagePlacementStrategiesRow($container);
         $this->provideImagePlacementStrategiesRowCropped($container);
     }
@@ -156,18 +160,33 @@ class Bootstrap extends Bootstrapper
         $this->getDB()->delete('tcron', 'jobType', Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
     }
 
-    private function provideImagePlacementStrategiesOffset(\JTL\Services\DefaultServicesInterface $container): void
+    private function provideImagePlacementStrategiesOffsetRatio1to1(\JTL\Services\DefaultServicesInterface $container): void
     {
-        $container->setFactory(OffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new OffsetOneProductImagePlacementStrategy();
+        $container->setFactory(OffsetRatio1to1OneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1OneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetTwoProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio1to1TwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1TwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetThreeProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio1to1ThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1ThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesOffsetRatio4to3(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(OffsetRatio4to3OneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3OneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(OffsetRatio4to3TwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3TwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(OffsetRatio4to3ThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3ThreeProductImagesPlacementStrategy();
         });
     }
 
