@@ -91,6 +91,3 @@ msgstr "In Reihe"
 
 msgid "admin.settings.image-strategy.row-cropped"
 msgstr "In Reihe - Ausgeschnitten"
-
-msgid "admin.settings.image-strategy.flipped-offset"
-msgstr "Verdreht versetzt (für Demonstrationszwecke der Erweiterbarkeit)"

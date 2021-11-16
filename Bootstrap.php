@@ -19,9 +19,6 @@ use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetOneProductImagePlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetThreeProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
@@ -109,7 +106,6 @@ class Bootstrap extends Bootstrapper
         });
 
         $this->provideImagePlacementStrategiesOffset($container);
-        $this->provideImagePlacementStrategiesFlippedOffset($container);
         $this->provideImagePlacementStrategiesRow($container);
         $this->provideImagePlacementStrategiesRowCropped($container);
     }
@@ -202,21 +198,6 @@ class Bootstrap extends Bootstrapper
 
         $container->setFactory(RowCroppedThreeProductImagesPlacementStrategy::getCode(), function ($container) {
             return new RowCroppedThreeProductImagesPlacementStrategy();
-        });
-    }
-
-    private function provideImagePlacementStrategiesFlippedOffset(\JTL\Services\DefaultServicesInterface $container): void
-    {
-        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetOneProductImagePlacementStrategy();
-        });
-
-        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetTwoProductImagesPlacementStrategy();
-        });
-
-        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetThreeProductImagesPlacementStrategy();
         });
     }
 
