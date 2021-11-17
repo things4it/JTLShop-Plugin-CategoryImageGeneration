@@ -6,6 +6,7 @@ use Plugin\t4it_category_image_generation\src\utils\PhpUtils;
 
 $implementsThreeProductImagePlacementStrategy = PhpUtils::getImplementations(ThreeProductImagePlacementStrategyInterface::class);
 
+$options = [];
 $sort = 1;
 foreach ($implementsThreeProductImagePlacementStrategy as $strategy){
     $option = new stdClass();
