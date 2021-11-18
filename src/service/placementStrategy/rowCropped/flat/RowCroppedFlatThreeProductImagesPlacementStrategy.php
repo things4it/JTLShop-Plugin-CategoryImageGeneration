@@ -6,6 +6,7 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedConstants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
@@ -58,8 +59,8 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
 
         $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImageDatas);
         foreach ($productImageDatas as $productImageData){
-            $offsetY = RowCroppedUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
-            RowCroppedUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
+            $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
+            ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
             $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING;
         }
 
@@ -72,7 +73,7 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
      */
     private function createProductImageArraySortedByHeight(... $productImageDatas): array
     {
-        RowCroppedUtils::sortImagesArrayByHeightAsc($productImageDatas);
+        ImagePlacementUtils::sortImagesArrayByHeightAsc($productImageDatas);
 
         return array($productImageDatas[0], $productImageDatas[2], $productImageDatas[1]);
     }
