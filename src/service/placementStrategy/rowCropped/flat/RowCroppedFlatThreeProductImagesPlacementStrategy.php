@@ -57,7 +57,7 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
 
         $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data, $productImage3Data);
 
-        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock($productImageDatas);
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH, RowCroppedConstants::PADDING);
         foreach ($productImageDatas as $productImageData){
             $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
             ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);

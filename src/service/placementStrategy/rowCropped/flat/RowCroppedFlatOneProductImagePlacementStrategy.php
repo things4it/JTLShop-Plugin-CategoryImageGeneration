@@ -8,6 +8,7 @@ use Plugin\t4it_category_image_generation\src\Constants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedConstants;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedUtils;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
@@ -44,7 +45,7 @@ class RowCroppedFlatOneProductImagePlacementStrategy implements OneProductImageP
 
         $productImageData = new ImagePlacementData($productImage);
 
-        $offsetX = RowCroppedUtils::calculateOffsetXForImagesBlock(array($productImageData));
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock(array($productImageData), self::$WIDTH, RowCroppedConstants::PADDING);
         $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
 
         ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);

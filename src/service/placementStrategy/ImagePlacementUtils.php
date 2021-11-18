@@ -27,6 +27,22 @@ class ImagePlacementUtils
     }
 
     /**
+     * @param ImagePlacementData[] $productImageDatas
+     * @param int $targetImageWidth
+     * @param int $padding
+     * @return int
+     */
+    public static function calculateOffsetXForImagesBlock(array $productImageDatas, int $targetImageWidth, int $padding = 0): int
+    {
+        $widthOffAllImages = 0;
+        foreach ($productImageDatas as $productImageData) {
+            $widthOffAllImages += $productImageData->getWidth();
+        }
+
+        return ($targetImageWidth - $widthOffAllImages - ($padding * 2)) / 2;
+    }
+
+    /**
      * @param ImagePlacementData $sourceImageData
      * @param int $offsetX
      * @param int $offsetY
