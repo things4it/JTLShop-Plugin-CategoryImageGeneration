@@ -44,13 +44,14 @@ class RowFlatThreeProductImagesPlacementStrategy implements ThreeProductImagePla
         $productImage2Data = new ImagePlacementData($productImage2);
         $productImage3Data = new ImagePlacementData($productImage3);
 
-        $offset1Y = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImage1Data, self::$HEIGHT);
-        $offset2Y = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImage2Data, self::$HEIGHT);
-        $offset3Y = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImage3Data, self::$HEIGHT);
+        $productImageDatas = array($productImage1Data, $productImage2Data, $productImage3Data);
 
-        \imagecopyresized($categoryImage, $productImage1, 0, $offset1Y, 0, 0, 340, 340, imagesx($productImage1), imagesy($productImage1));
-        \imagecopyresized($categoryImage, $productImage2, 340 + 1, $offset2Y, 0, 0, 340, 340, imagesx($productImage2), imagesy($productImage2));
-        \imagecopyresized($categoryImage, $productImage3, 340 + 1 + 340 + 1, $offset3Y, 0, 0, 340, 340, imagesx($productImage3), imagesy($productImage3));
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH);
+        foreach ($productImageDatas as $productImageData){
+            $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
+            ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
+            $offsetX += $productImageData->getWidth() + 1;
+        }
 
         return $categoryImage;
     }

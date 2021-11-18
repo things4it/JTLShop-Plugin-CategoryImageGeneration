@@ -40,9 +40,12 @@ class RowFlatOneProductImagePlacementStrategy implements OneProductImagePlacemen
 
         $productImageData = new ImagePlacementData($productImage);
 
-        $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
+        $productImageDatas = array($productImageData);
 
-        \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
+        $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH);
+
+        ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
 
         return $categoryImage;
     }
