@@ -1,9 +1,9 @@
 <?php
 
-namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped;
+namespace Plugin\t4it_category_image_generation\src\service\placementStrategy;
 
 
-class RowCroppedImageData
+class ImagePlacementData
 {
 
     private $image;
@@ -20,7 +20,7 @@ class RowCroppedImageData
     private $height;
 
     /**
-     * RowCroppedImageData constructor.
+     * ImagePlacementData constructor.
      * @param $image
      */
     public function __construct($image)

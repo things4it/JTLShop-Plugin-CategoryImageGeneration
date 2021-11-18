@@ -5,8 +5,8 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedConstants;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedImageData;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
@@ -47,8 +47,8 @@ class RowCroppedFlatTwoProductImagesPlacementStrategy implements TwoProductImage
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
 
-        $productImage1Data = new RowCroppedImageData($productImage1);
-        $productImage2Data = new RowCroppedImageData($productImage2);
+        $productImage1Data = new ImagePlacementData($productImage1);
+        $productImage2Data = new ImagePlacementData($productImage2);
 
         $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data);
 
@@ -63,8 +63,8 @@ class RowCroppedFlatTwoProductImagesPlacementStrategy implements TwoProductImage
     }
 
     /**
-     * @param RowCroppedImageData[] $productImageDatas
-     * @return RowCroppedImageData[]
+     * @param ImagePlacementData[] $productImageDatas
+     * @return ImagePlacementData[]
      */
     private function createProductImageArraySortedByHeight(... $productImageDatas): array
     {

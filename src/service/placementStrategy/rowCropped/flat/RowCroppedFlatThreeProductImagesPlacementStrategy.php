@@ -5,8 +5,8 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedConstants;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedImageData;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\RowCroppedUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\ThreeProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
@@ -50,9 +50,9 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
         $productImage3 = \imagecropauto($productImage3, \IMG_CROP_SIDES);
 
-        $productImage1Data = new RowCroppedImageData($productImage1);
-        $productImage2Data = new RowCroppedImageData($productImage2);
-        $productImage3Data = new RowCroppedImageData($productImage3);
+        $productImage1Data = new ImagePlacementData($productImage1);
+        $productImage2Data = new ImagePlacementData($productImage2);
+        $productImage3Data = new ImagePlacementData($productImage3);
 
         $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data, $productImage3Data);
 
@@ -67,8 +67,8 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
     }
 
     /**
-     * @param RowCroppedImageData[] $productImageDatas
-     * @return RowCroppedImageData[]
+     * @param ImagePlacementData[] $productImageDatas
+     * @return ImagePlacementData[]
      */
     private function createProductImageArraySortedByHeight(... $productImageDatas): array
     {

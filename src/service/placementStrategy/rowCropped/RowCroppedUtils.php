@@ -2,30 +2,32 @@
 
 namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped;
 
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
+
 class RowCroppedUtils
 {
     /**
-     * @param RowCroppedImageData[] $images
+     * @param ImagePlacementData[] $images
      */
     public static function sortImagesArrayByHeightAsc(array &$images)
     {
-        usort($images, function(RowCroppedImageData $a, RowCroppedImageData $b) {
+        usort($images, function(ImagePlacementData $a, ImagePlacementData $b) {
             return $a->getHeight() - $b->getHeight();
         });
     }
 
     /**
-     * @param RowCroppedImageData $productImageData
+     * @param ImagePlacementData $productImageData
      * @param int $height
      * @return int
      */
-    public static function calculateOffsetYByTargetImageHeight(RowCroppedImageData $productImageData, int $height): int
+    public static function calculateOffsetYByTargetImageHeight(ImagePlacementData $productImageData, int $height): int
     {
         return ($height - $productImageData->getHeight()) / 2;
     }
 
     /**
-     * @param RowCroppedImageData[] $productImageDatas
+     * @param ImagePlacementData[] $productImageDatas
      * @return int
      */
     public static function calculateOffsetXForImagesBlock(array $productImageDatas): int
@@ -39,12 +41,12 @@ class RowCroppedUtils
     }
 
     /**
-     * @param RowCroppedImageData $sourceImageData
+     * @param ImagePlacementData $sourceImageData
      * @param int $offsetX
      * @param int $offsetY
      * @param $targetImage
      */
-    public static function copyImage(RowCroppedImageData $sourceImageData, int $offsetX, int $offsetY, $targetImage)
+    public static function copyImage(ImagePlacementData $sourceImageData, int $offsetX, int $offsetY, $targetImage)
     {
         \imagecopyresized(
             $targetImage,
