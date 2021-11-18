@@ -5,6 +5,8 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 
 use Plugin\t4it_category_image_generation\src\Constants;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementData;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\ImagePlacementUtils;
 use Plugin\t4it_category_image_generation\src\service\placementStrategy\OneProductImagePlacementStrategyInterface;
 use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
@@ -36,7 +38,11 @@ class RowFlatOneProductImagePlacementStrategy implements OneProductImagePlacemen
 
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 1);
 
-        \imagecopyresized($categoryImage, $productImage, 342, 1, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
+        $productImageData = new ImagePlacementData($productImage);
+
+        $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
+
+        \imagecopyresized($categoryImage, $productImage, 342, $offsetY, 0, 0, 340, 340, imagesx($productImage), imagesy($productImage));
 
         return $categoryImage;
     }
