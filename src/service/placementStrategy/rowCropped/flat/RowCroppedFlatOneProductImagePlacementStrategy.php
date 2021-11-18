@@ -12,8 +12,15 @@ use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class RowCroppedFlatOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
-    private static int $WIDTH = 1024;
-    private static int $HEIGHT = 340;
+    /**
+     * @var int
+     */
+    private static $WIDTH = 1024;
+
+    /**
+     * @var int
+     */
+    private static $HEIGHT = 340;
 
     public static function getName(): string
     {

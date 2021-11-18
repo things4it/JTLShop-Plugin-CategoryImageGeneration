@@ -10,8 +10,15 @@ use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class RowFlatOneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
-    private static int $WIDTH = 1024;
-    private static int $HEIGHT = 342;
+    /**
+     * @var int
+     */
+    private static $WIDTH = 1024;
+
+    /**
+     * @var int
+     */
+    private static $HEIGHT = 342;
 
     public static function getName(): string
     {

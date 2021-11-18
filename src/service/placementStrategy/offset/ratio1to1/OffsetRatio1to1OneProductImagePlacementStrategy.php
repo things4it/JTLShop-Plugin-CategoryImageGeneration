@@ -10,8 +10,17 @@ use Plugin\t4it_category_image_generation\src\utils\ImageUtils;
 
 class OffsetRatio1to1OneProductImagePlacementStrategy implements OneProductImagePlacementStrategyInterface
 {
-    private static int $WIDTH = 1024;
-    private static int $HEIGHT = 1024;
+    /**
+     * @var int
+     */
+    private static $WIDTH = 1024;
+
+    /**
+     * @var int
+     */
+    private static $HEIGHT = 1024;
+
+    // php 7.3.32
 
     public static function getName(): string
     {
