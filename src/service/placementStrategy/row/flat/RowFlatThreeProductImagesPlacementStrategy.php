@@ -44,7 +44,7 @@ class RowFlatThreeProductImagesPlacementStrategy implements ThreeProductImagePla
         $productImage2Data = new ImagePlacementData($productImage2);
         $productImage3Data = new ImagePlacementData($productImage3);
 
-        $productImageDatas = array($productImage1Data, $productImage2Data, $productImage3Data);
+        $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data, $productImage3Data);
 
         $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH);
         foreach ($productImageDatas as $productImageData){
@@ -54,5 +54,16 @@ class RowFlatThreeProductImagesPlacementStrategy implements ThreeProductImagePla
         }
 
         return $categoryImage;
+    }
+
+    /**
+     * @param ImagePlacementData[] $productImageDatas
+     * @return ImagePlacementData[]
+     */
+    private function createProductImageArraySortedByHeight(... $productImageDatas): array
+    {
+        ImagePlacementUtils::sortImagesArrayByHeightAsc($productImageDatas);
+
+        return array($productImageDatas[0], $productImageDatas[2], $productImageDatas[1]);
     }
 }

@@ -43,7 +43,7 @@ class RowFlatTwoProductImagesPlacementStrategy implements TwoProductImagePlaceme
         $productImage1Data = new ImagePlacementData($productImage1);
         $productImage2Data = new ImagePlacementData($productImage2);
 
-        $productImageDatas = array($productImage1Data, $productImage2Data);
+        $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data);
 
         $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH);
         foreach ($productImageDatas as $productImageData){
@@ -53,5 +53,16 @@ class RowFlatTwoProductImagesPlacementStrategy implements TwoProductImagePlaceme
         }
 
         return $categoryImage;
+    }
+
+    /**
+     * @param ImagePlacementData[] $productImageDatas
+     * @return ImagePlacementData[]
+     */
+    private function createProductImageArraySortedByHeight(... $productImageDatas): array
+    {
+        ImagePlacementUtils::sortImagesArrayByHeightAsc($productImageDatas);
+
+        return array($productImageDatas[0], $productImageDatas[1]);
     }
 }
