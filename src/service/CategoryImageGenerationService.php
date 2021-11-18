@@ -25,7 +25,7 @@ class CategoryImageGenerationService implements CategoryImageGenerationServiceIn
     /**
      * @var PluginInterface
      */
-    private PluginInterface $plugin;
+    private $plugin;
 
     /**
      * @var DbInterface
