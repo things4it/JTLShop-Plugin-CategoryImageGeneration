@@ -1,19 +1,33 @@
 <?php declare(strict_types=1);
 
+// TODO: recheck dynamic resolving: doesnt worked in prod
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1TwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3TwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatTwoProductImagesPlacementStrategy;
 
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\TwoProductImagePlacementStrategyInterface;
-use Plugin\t4it_category_image_generation\src\utils\PhpUtils;
+$option = new stdClass();
+$option->cWert = OffsetRatio1to1TwoProductImagesPlacementStrategy::getCode();
+$option->cName = OffsetRatio1to1TwoProductImagesPlacementStrategy::getName();
+$option->nSort = 1;
+$options[] = $option;
 
-$implementsTwoProductImagePlacementStrategy = PhpUtils::getImplementations(TwoProductImagePlacementStrategyInterface::class);
+$option = new stdClass();
+$option->cWert = OffsetRatio4to3TwoProductImagesPlacementStrategy::getCode();
+$option->cName = OffsetRatio4to3TwoProductImagesPlacementStrategy::getName();
+$option->nSort = 2;
+$options[] = $option;
 
-$options = [];
-$sort = 1;
-foreach ($implementsTwoProductImagePlacementStrategy as $strategy){
-    $option = new stdClass();
-    $option->cWert = $strategy::getCode();
-    $option->cName = $strategy::getName();
-    $option->nSort = $sort++;
-    $options[] = $option;
-}
+$option = new stdClass();
+$option->cWert = RowFlatTwoProductImagesPlacementStrategy::getCode();
+$option->cName = RowFlatTwoProductImagesPlacementStrategy::getName();
+$option->nSort = 3;
+$options[] = $option;
+
+$option = new stdClass();
+$option->cWert = RowCroppedFlatTwoProductImagesPlacementStrategy::getCode();
+$option->cName = RowCroppedFlatTwoProductImagesPlacementStrategy::getName();
+$option->nSort = 4;
+$options[] = $option;
 
 return $options;
