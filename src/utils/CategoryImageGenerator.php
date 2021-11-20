@@ -4,6 +4,7 @@
 namespace Plugin\t4it_category_image_generation\src\utils;
 
 
+use Exception;
 use JTL\Shop;
 use Plugin\t4it_category_image_generation\src\db\entity\Image;
 
@@ -60,6 +61,7 @@ class CategoryImageGenerator
 
     /**
      * @param Image[] $productImages
+     * @throws Exception
      */
     private static function generateImageWithConfiguredStrategy(array $productImages, string $imageStrategyOneImage, string $imageStrategyTwoImages, string $imageStrategyThreeImages)
     {

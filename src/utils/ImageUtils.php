@@ -4,6 +4,8 @@
 namespace Plugin\t4it_category_image_generation\src\utils;
 
 
+use Exception;
+
 class ImageUtils
 {
 
@@ -26,18 +28,25 @@ class ImageUtils
     /**
      * @param string $originalImagePath
      * @return false|\GdImage|resource
+     * @throws Exception
      */
     public static function createImage(string $originalImagePath)
     {
-        list($originalImageType) = \getimagesize($originalImagePath);
+        $originalImageData = \getimagesize($originalImagePath);
+        if($originalImageData == false){
+            throw new Exception(sprintf('Failed to extract data like image-type from %s', $originalImagePath));
+        }
+
+        $originalImageType = $originalImageData[2];
         switch ($originalImageType) {
             case \IMAGETYPE_GIF:
                 return \imagecreatefromgif($originalImagePath);
             case \IMAGETYPE_PNG:
                 return \imagecreatefrompng($originalImagePath);
             case \IMAGETYPE_JPEG:
-            default:
                 return \imagecreatefromjpeg($originalImagePath);
+            default:
+                throw new Exception(sprintf('Image-type %s not supported %s', $originalImageType, $originalImagePath));
         }
     }
 
