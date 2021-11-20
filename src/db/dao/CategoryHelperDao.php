@@ -161,7 +161,9 @@ class CategoryHelperDao
                 JOIN tartikelpict ap ON 
                     ap.kArtikel = a.kArtikel
                     AND ap.nNr = 1
-                JOIN tbild b ON b.kBild = ap.kBild
+                JOIN tbild b ON 
+                    b.kBild = ap.kBild
+                    AND LOWER(b.cPfad) REGEXP \'^.*(.png|.jpeg|.jpg|.gif)$\'
                 JOIN tkategorieartikel ka ON ka.kArtikel = a.kArtikel
                 WHERE
                     ka.kKategorie IN (' . join(',', $relevantCategoryIds) . ')
