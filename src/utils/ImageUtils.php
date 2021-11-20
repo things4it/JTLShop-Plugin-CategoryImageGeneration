@@ -75,12 +75,12 @@ class ImageUtils
             $newHeight = $maxHeight;
             $newWidth = $originalImageWidth * $ratio;
         } else {
-            $ratio = $maxHeight / $originalImageWidth;
+            $ratio = $maxWidth / $originalImageWidth;
             $newWidth = $maxWidth;
             $newHeight = $originalImageHeight * $ratio;
         }
 
-        $imageResized = ImageUtils::createTransparentImage($maxWidth, $maxHeight);
+        $imageResized = ImageUtils::createTransparentImage($newWidth, $newHeight);
         imagecopyresized($imageResized, $originalImage, 0, 0, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
 
         \imagedestroy($originalImage);
