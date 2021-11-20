@@ -41,7 +41,7 @@ class RowCroppedFlatOneProductImagePlacementStrategy implements OneProductImageP
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImageSize = (self::$WIDTH / 3) - (2 * RowCroppedConstants::PADDING_BETWEEN);
+        $productImageSize = (int) ((self::$WIDTH / 3) - (2 * RowCroppedConstants::PADDING_BETWEEN));
         $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, $productImageSize, $productImageSize);
 
         $productImageData = new ImagePlacementData($productImage);

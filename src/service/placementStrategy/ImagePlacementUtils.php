@@ -23,7 +23,7 @@ class ImagePlacementUtils
      */
     public static function calculateOffsetYByTargetImageHeight(ImagePlacementData $productImageData, int $height): int
     {
-        return ($height - $productImageData->getHeight()) / 2;
+        return (int) (($height - $productImageData->getHeight()) / 2);
     }
 
     /**
@@ -43,7 +43,7 @@ class ImagePlacementUtils
         // remove 1 padding because it is only padding "between"
         $widthOfAllImagesAndPaddingBetween -= $paddingBetweenImages;
 
-        return ($targetImageWidth - $widthOfAllImagesAndPaddingBetween) / 2;
+        return (int) (($targetImageWidth - $widthOfAllImagesAndPaddingBetween) / 2);
     }
 
     /**

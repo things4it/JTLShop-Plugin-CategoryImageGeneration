@@ -52,11 +52,11 @@ class ImageUtils
             $scale = $targetHeight / $originalImageHeight;
         }
 
-        $newWidth = $originalImageWidth * $scale - $padding * 2;
-        $newHeight = $originalImageHeight * $scale - $padding * 2;
+        $newWidth = (int) ($originalImageWidth * $scale - $padding * 2);
+        $newHeight = (int) ($originalImageHeight * $scale - $padding * 2);
 
-        $offsetX = ($targetWidth - $newWidth) / 2;
-        $offsetY = ($targetHeight - $newHeight) / 2;
+        $offsetX = (int) (($targetWidth - $newWidth) / 2);
+        $offsetY = (int) (($targetHeight - $newHeight) / 2);
 
         $imageResized = ImageUtils::createTransparentImage($targetWidth, $targetHeight);
         \imagecopyresampled($imageResized, $originalImage, $offsetX, $offsetY, 0, 0, $newWidth, $newHeight, $originalImageWidth, $originalImageHeight);
@@ -73,11 +73,11 @@ class ImageUtils
         if ($originalImageHeight > $originalImageWidth) {
             $ratio = $maxHeight / $originalImageHeight;
             $newHeight = $maxHeight;
-            $newWidth = $originalImageWidth * $ratio;
+            $newWidth = (int) ($originalImageWidth * $ratio);
         } else {
             $ratio = $maxWidth / $originalImageWidth;
             $newWidth = $maxWidth;
-            $newHeight = $originalImageHeight * $ratio;
+            $newHeight = (int) ($originalImageHeight * $ratio);
         }
 
         $imageResized = ImageUtils::createTransparentImage($newWidth, $newHeight);

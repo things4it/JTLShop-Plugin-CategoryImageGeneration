@@ -37,7 +37,7 @@ class RowFlatTwoProductImagesPlacementStrategy implements TwoProductImagePlaceme
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImageSize = (self::$WIDTH / 3) - (2 * RowConstants::PADDING_BETWEEN);
+        $productImageSize = (int) ((self::$WIDTH / 3) - (2 * RowConstants::PADDING_BETWEEN));
         $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, $productImageSize, $productImageSize);
         $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, $productImageSize, $productImageSize);
 
