@@ -5,10 +5,10 @@ Angebotstitel:	Kategoriebild generator
 Kopfbereich:
 *	Generiert Bilder für Kategorien die kein Bild haben
 *	Berücksichtigt werden Bilder der Kategorie sowie deren Unterkategorien
-*	Anzahl der Artikel sowie das Seitenverhaltniss des Bilds ist konfigurierbar
+*	Verschiedene Bildvarianten wie z.B. "Versetzt" und "In Reihe - Ausgeschnitten" sind verfügbar
 
 -----
-	
+
 Produktbeschreibung Teil A
 
 # Keinen "Kopf" für Kategoriebilder?
@@ -23,9 +23,9 @@ Für die Bilder werden die Artikel-Bilder der Kategorien und deren Unterkategori
 
 ## Habe ich einfluss auf die Kategoriebild generierung?
 
-Die Generierung ist nicht zu 100% Flexiebel, aber du kannst entscheiden 
+Die Generierung ist nicht zu 100% Flexiebel, aber du kannst entscheiden
+* wie das Kategoriebild zusammengesetzt werden soll: "Versetzt", "In Reihe", "In Reihe - Ausgeschnitten"
 * ob deine Kategoriebilder maximal aus 1,2 oder 3 Artikelbilder zusammengesetzt werden
-* ob das Seitenverhaltniss 1:1 oder 4:3 sein soll
 
 Zudem ist die Grundlage geschaffen eigene "Bildvarianten" zu Implementieren.
 Also möchstest du z.B. das die Artikelbilder anders in dem Kategoriebild platziert werden - so ist das "relativ" einfach möglich.
