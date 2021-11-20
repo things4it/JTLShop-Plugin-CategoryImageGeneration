@@ -36,7 +36,7 @@ class RowFlatOneProductImagePlacementStrategy implements OneProductImagePlacemen
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340, 1);
+        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340);
 
         $productImageData = new ImagePlacementData($productImage);
 

@@ -36,9 +36,9 @@ class RowFlatThreeProductImagesPlacementStrategy implements ThreeProductImagePla
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 1);
-        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340, 1);
-        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340, 1);
+        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340);
+        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340);
+        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340);
 
         $productImage1Data = new ImagePlacementData($productImage1);
         $productImage2Data = new ImagePlacementData($productImage2);

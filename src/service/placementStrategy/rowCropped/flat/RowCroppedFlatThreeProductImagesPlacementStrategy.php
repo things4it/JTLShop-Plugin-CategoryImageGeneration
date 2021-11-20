@@ -43,9 +43,9 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340, 0);
-        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340, 0);
-        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340, 0);
+        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340);
+        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340);
+        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340);
 
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);

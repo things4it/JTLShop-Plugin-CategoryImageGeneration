@@ -65,7 +65,7 @@ class ImageUtils
         return $imageResized;
     }
 
-    public static function resizeImageToMaxWidthHeight($originalImage, int $maxWidth = 640, int $maxHeight = 640, int $padding = 15)
+    public static function resizeImageToMaxWidthHeight($originalImage, int $maxWidth = 640, int $maxHeight = 640)
     {
         $originalImageWidth = imagesx($originalImage);
         $originalImageHeight = imagesy($originalImage);
