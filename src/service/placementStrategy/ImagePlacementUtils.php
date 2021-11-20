@@ -32,14 +32,18 @@ class ImagePlacementUtils
      * @param int $padding
      * @return int
      */
-    public static function calculateOffsetXForImagesBlock(array $productImageDatas, int $targetImageWidth, int $padding = 0): int
+    public static function calculateOffsetXForImagesBlock(array $productImageDatas, int $targetImageWidth, int $paddingBetweenImages = 0): int
     {
-        $widthOffAllImages = 0;
+        $widthOfAllImagesAndPaddingBetween = 0;
         foreach ($productImageDatas as $productImageData) {
-            $widthOffAllImages += $productImageData->getWidth();
+            $widthOfAllImagesAndPaddingBetween += $productImageData->getWidth();
+            $widthOfAllImagesAndPaddingBetween += $paddingBetweenImages;
         }
 
-        return ($targetImageWidth - $widthOffAllImages - ($padding * 2)) / 2;
+        // remove 1 padding because it is only padding "between"
+        $widthOfAllImagesAndPaddingBetween -= $paddingBetweenImages;
+
+        return ($targetImageWidth - $widthOfAllImagesAndPaddingBetween) / 2;
     }
 
     /**

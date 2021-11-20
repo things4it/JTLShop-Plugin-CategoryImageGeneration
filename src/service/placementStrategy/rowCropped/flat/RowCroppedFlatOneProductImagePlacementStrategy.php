@@ -41,11 +41,12 @@ class RowCroppedFlatOneProductImagePlacementStrategy implements OneProductImageP
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, 340, 340);
+        $productImageSize = (self::$WIDTH / 3) - (2 * RowCroppedConstants::PADDING_BETWEEN);
+        $productImage = ImageUtils::resizeImageToMaxWidthHeight($productImage, $productImageSize, $productImageSize);
 
         $productImageData = new ImagePlacementData($productImage);
 
-        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock(array($productImageData), self::$WIDTH, RowCroppedConstants::PADDING);
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock(array($productImageData), self::$WIDTH, RowCroppedConstants::PADDING_BETWEEN);
         $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
 
         ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);

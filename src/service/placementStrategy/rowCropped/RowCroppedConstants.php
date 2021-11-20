@@ -4,5 +4,5 @@ namespace Plugin\t4it_category_image_generation\src\service\placementStrategy\ro
 
 class RowCroppedConstants
 {
-    public const PADDING = 20;
+    public const PADDING_BETWEEN = 20;
 }

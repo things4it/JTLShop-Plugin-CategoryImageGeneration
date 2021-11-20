@@ -43,9 +43,10 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
     {
         $categoryImage = ImageUtils::createTransparentImage(self::$WIDTH, self::$HEIGHT);
 
-        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, 340, 340);
-        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, 340, 340);
-        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, 340, 340);
+        $productImageSize = (self::$WIDTH / 3) - (2 * RowCroppedConstants::PADDING_BETWEEN);
+        $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, $productImageSize, $productImageSize);
+        $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, $productImageSize, $productImageSize);
+        $productImage3 = ImageUtils::resizeImageToMaxWidthHeight($productImage3, $productImageSize, $productImageSize);
 
         $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
         $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
@@ -57,11 +58,11 @@ class RowCroppedFlatThreeProductImagesPlacementStrategy implements ThreeProductI
 
         $productImageDatas = $this->createProductImageArraySortedByHeight($productImage1Data, $productImage2Data, $productImage3Data);
 
-        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH, RowCroppedConstants::PADDING);
+        $offsetX = ImagePlacementUtils::calculateOffsetXForImagesBlock($productImageDatas, self::$WIDTH, RowCroppedConstants::PADDING_BETWEEN);
         foreach ($productImageDatas as $productImageData){
             $offsetY = ImagePlacementUtils::calculateOffsetYByTargetImageHeight($productImageData, self::$HEIGHT);
             ImagePlacementUtils::copyImage($productImageData, $offsetX, $offsetY, $categoryImage);
-            $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING;
+            $offsetX += $productImageData->getWidth() + RowCroppedConstants::PADDING_BETWEEN;
         }
 
         return $categoryImage;
