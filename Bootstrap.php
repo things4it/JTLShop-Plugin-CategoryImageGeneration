@@ -19,12 +19,18 @@ use Plugin\t4it_category_image_generation\src\db\dao\CategoryHelperDao;
 use Plugin\t4it_category_image_generation\src\db\dao\SettingsDao;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationService;
 use Plugin\t4it_category_image_generation\src\service\CategoryImageGenerationServiceInterface;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\flippedOffset\FlippedOffsetTwoProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetOneProductImagePlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetThreeProductImagesPlacementStrategy;
-use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\OffsetTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1OneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1ThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio1to1\OffsetRatio1to1TwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3OneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3ThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\offset\ratio4to3\OffsetRatio4to3TwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\row\flat\RowFlatTwoProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatOneProductImagePlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatThreeProductImagesPlacementStrategy;
+use Plugin\t4it_category_image_generation\src\service\placementStrategy\rowCropped\flat\RowCroppedFlatTwoProductImagesPlacementStrategy;
 use Plugin\t4it_category_image_generation\src\utils\CategoryImageGenerator;
 
 /**
@@ -102,8 +108,10 @@ class Bootstrap extends Bootstrapper
             return new CategoryImageGenerationService($this->getDB(), $this->getPlugin());
         });
 
-        $this->provideImagePlacementStrategiesOffset($container);
-        $this->provideImagePlacementStrategiesFlippedOffset($container);
+        $this->provideImagePlacementStrategiesOffsetRatio1to1($container);
+        $this->provideImagePlacementStrategiesOffsetRatio4to3($container);
+        $this->provideImagePlacementStrategiesRowFlat($container);
+        $this->provideImagePlacementStrategiesRowCroppedFlat($container);
     }
 
     /**
@@ -152,33 +160,63 @@ class Bootstrap extends Bootstrapper
         $this->getDB()->delete('tcron', 'jobType', Constants::CRON_JOB_CATEGORY_IMAGE_GENERATION);
     }
 
-    private function provideImagePlacementStrategiesOffset(\JTL\Services\DefaultServicesInterface $container): void
+    private function provideImagePlacementStrategiesOffsetRatio1to1(\JTL\Services\DefaultServicesInterface $container): void
     {
-        $container->setFactory(OffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new OffsetOneProductImagePlacementStrategy();
+        $container->setFactory(OffsetRatio1to1OneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1OneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(OffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetTwoProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio1to1TwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1TwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(OffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new OffsetThreeProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio1to1ThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio1to1ThreeProductImagesPlacementStrategy();
         });
     }
 
-    private function provideImagePlacementStrategiesFlippedOffset(\JTL\Services\DefaultServicesInterface $container): void
+    private function provideImagePlacementStrategiesOffsetRatio4to3(\JTL\Services\DefaultServicesInterface $container): void
     {
-        $container->setFactory(FlippedOffsetOneProductImagePlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetOneProductImagePlacementStrategy();
+        $container->setFactory(OffsetRatio4to3OneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3OneProductImagePlacementStrategy();
         });
 
-        $container->setFactory(FlippedOffsetTwoProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetTwoProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio4to3TwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3TwoProductImagesPlacementStrategy();
         });
 
-        $container->setFactory(FlippedOffsetThreeProductImagesPlacementStrategy::getCode(), function ($container) {
-            return new FlippedOffsetThreeProductImagesPlacementStrategy();
+        $container->setFactory(OffsetRatio4to3ThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new OffsetRatio4to3ThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesRowFlat(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(RowFlatOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new RowFlatOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(RowFlatTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowFlatTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(RowFlatThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowFlatThreeProductImagesPlacementStrategy();
+        });
+    }
+
+    private function provideImagePlacementStrategiesRowCroppedFlat(\JTL\Services\DefaultServicesInterface $container): void
+    {
+        $container->setFactory(RowCroppedFlatOneProductImagePlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatOneProductImagePlacementStrategy();
+        });
+
+        $container->setFactory(RowCroppedFlatTwoProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatTwoProductImagesPlacementStrategy();
+        });
+
+        $container->setFactory(RowCroppedFlatThreeProductImagesPlacementStrategy::getCode(), function ($container) {
+            return new RowCroppedFlatThreeProductImagesPlacementStrategy();
         });
     }
 

@@ -30,33 +30,25 @@
                         <Option value="3" sort="3">3</Option>
                     </RadioOptions>
                 </Setting>
-                <Setting type="radio" initialValue="1:1" sort="2" conf="Y">
-                    <Name>Verhältnis des Kategoriebilds</Name>
-                    <ValueName>t4it_category_image_generation-categoryImageRatio</ValueName>
-                    <RadioOptions>
-                        <Option value="1:1" sort="1">1:1</Option>
-                        <Option value="4:3" sort="2">4:3</Option>
-                    </RadioOptions>
-                </Setting>
-                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-one" sort="3" conf="Y">
+                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-ratio4to3-one" sort="3" conf="Y">
                     <Name>Modus bei einem Bild</Name>
                     <ValueName>t4it_category_image_generation-placement_strategy_for_1_image</ValueName>
                     <OptionsSource>
                         <File>select-source_one-image-placement-strategy.php</File>
                     </OptionsSource>
                 </Setting>
-                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-two" sort="4" conf="Y">
+                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-ratio4to3-two" sort="4" conf="Y">
                     <Name>Modus bei zwei Bildern</Name>
                     <ValueName>t4it_category_image_generation-placement_strategy_for_2_images</ValueName>
                     <OptionsSource>
-                        <File>select-source_three-image-placement-strategy.php</File>
+                        <File>select-source_two-image-placement-strategy.php</File>
                     </OptionsSource>
                 </Setting>
-                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-three" sort="5" conf="Y">
+                <Setting type="selectbox" initialValue="t4it_category_image_generation-strategy-offset-ratio4to3-three" sort="5" conf="Y">
                     <Name>Modus bei drei Bildern</Name>
                     <ValueName>t4it_category_image_generation-placement_strategy_for_3_images</ValueName>
                     <OptionsSource>
-                        <File>select-source_two-image-placement-strategy.php</File>
+                        <File>select-source_three-image-placement-strategy.php</File>
                     </OptionsSource>
                 </Setting>
             </Settingslink>

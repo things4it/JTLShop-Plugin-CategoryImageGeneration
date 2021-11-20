@@ -21,9 +21,6 @@ msgstr "Max count of article images"
 msgid "Maximale Anzahl der Artikelbilder die für die generierung eines Kategoriebilds verwendet werden"
 msgstr "Max count of article images which will be used for the generation of one category image"
 
-msgid "Verhältnis des Kategoriebilds"
-msgstr "Ratio of the category image"
-
 msgid "Modus bei einem Bild"
 msgstr "Mode for one image"
 
@@ -83,8 +80,14 @@ msgstr "The settings only take effect at the next start of the generation cronjo
 
 ## image-strategies
 
-msgid "admin.settings.image-strategy.offset"
-msgstr "Offset"
+msgid "admin.settings.image-strategy.offset-ratio1to1"
+msgstr "Offset (Ratio 1:1)"
 
-msgid "admin.settings.image-strategy.flipped-offset"
-msgstr "Flipped Offset (for demonstration of the extensibility)"
+msgid "admin.settings.image-strategy.offset-ratio4to3"
+msgstr "Offset (Ratio 4:3)"
+
+msgid "admin.settings.image-strategy.row-flat"
+msgstr "Row (Flat, Ratio ~4:1?)"
+
+msgid "admin.settings.image-strategy.row-cropped-flat"
+msgstr "Row Cropped (Flat, Ratio ~4:1?)"

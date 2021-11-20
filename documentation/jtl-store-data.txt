@@ -1,0 +1,52 @@
+Angebotstitel:	Kategoriebild generator
+
+-----	
+
+Kopfbereich:
+*	Generiert Bilder für Kategorien die kein Bild haben
+*	Berücksichtigt werden Bilder der Kategorie sowie deren Unterkategorien
+*	Verschiedene Bildvarianten wie z.B. "Versetzt" und "In Reihe - Ausgeschnitten" sind verfügbar
+
+-----
+
+Produktbeschreibung Teil A
+
+# Keinen "Kopf" für Kategoriebilder?
+
+Du hast noch keine Kategoriebilder, gerade keinen Nerv für ein Shooting oder findest einfach keine passenden Kategoriebilder?
+
+**Dann bist du hier genau richtig!**
+
+Dieses Plugin generiert Bilder für Kategorien die noch kein Bild haben.
+Für die Bilder werden die Artikel-Bilder der Kategorien und deren Unterkategorien verwendet - wodurch indirekt eine "kleine" Kategorievorschau entsteht.
+
+
+## Habe ich einfluss auf die Kategoriebild generierung?
+
+Die Generierung ist nicht zu 100% Flexiebel, aber du kannst entscheiden
+* wie das Kategoriebild zusammengesetzt werden soll: "Versetzt", "In Reihe", "In Reihe - Ausgeschnitten"
+* ob deine Kategoriebilder maximal aus 1,2 oder 3 Artikelbilder zusammengesetzt werden
+
+Zudem ist die Grundlage geschaffen eigene "Bildvarianten" zu Implementieren.
+Also möchstest du z.B. das die Artikelbilder anders in dem Kategoriebild platziert werden - so ist das "relativ" einfach möglich.
+
+Aufträge diesbezüglich nehme ich gerne entgegen - oder du baust es dir selbst ;).
+Angemerkt sei hierbei das das Plugin Open-Source ist - Pull-Requests jeglicher Art sind willkommen - hast du Verbesserungen dann gib bescheid so das andere auch davon profitieren (vllt profitierst du ja auch von Verbesserungen/Erweiterungen anderer).
+
+
+-----
+
+Vorteile in Kürze:
+*	Keine Kategorie ohne Bild
+*	Lösung basiert auf JTL-Standard
+*	Bilder aus der Wawi "gewinnen" immer
+*	Das Plugin ist Open-Source - jeder kann mitmachen
+
+-----
+
+Welches Kundenziel unterstützt die Erweiterung?:	Usability
+
+-----	
+
+Wodurch genau erreicht die Erweiterung dieses Ziel?:	Die Navigation durch Kategorien mit Bildern "fühlt" sich einfach besser an
+
