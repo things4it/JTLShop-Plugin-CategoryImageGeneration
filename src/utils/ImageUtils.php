@@ -97,4 +97,14 @@ class ImageUtils
         return $imageResized;
     }
 
+    public static function cropImage($image)
+    {
+        $croppedImage = \imagecropauto($image, \IMG_CROP_SIDES);
+        if($croppedImage == false){
+            return $image;
+        }
+
+        return $croppedImage;
+    }
+
 }
