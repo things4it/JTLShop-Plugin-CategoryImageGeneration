@@ -46,8 +46,8 @@ class RowCroppedFlatTwoProductImagesPlacementStrategy implements TwoProductImage
         $productImage1 = ImageUtils::resizeImageToMaxWidthHeight($productImage1, $productImageSize, $productImageSize);
         $productImage2 = ImageUtils::resizeImageToMaxWidthHeight($productImage2, $productImageSize, $productImageSize);
 
-        $productImage1 = \imagecropauto($productImage1, \IMG_CROP_SIDES);
-        $productImage2 = \imagecropauto($productImage2, \IMG_CROP_SIDES);
+        $productImage1 = ImageUtils::cropImage($productImage1);
+        $productImage2 = ImageUtils::cropImage($productImage2);
 
         $productImage1Data = new ImagePlacementData($productImage1);
         $productImage2Data = new ImagePlacementData($productImage2);
